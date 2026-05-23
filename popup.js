@@ -1,14 +1,25 @@
-const VERSION = "2.7.1";
+const VERSION = "2.7.2";
 
 // 介面切換邏輯
 function showScreen(screenId) {
+  console.log('Showing screen:', screenId);
   document.querySelectorAll('.screen, .tab-content').forEach(s => s.classList.add('hidden'));
   const target = document.getElementById(screenId);
-  if (target) target.classList.remove('hidden');
+  if (target) {
+    target.classList.remove('hidden');
+    // 如果是顯示主畫面，確保工具網格也是可見的
+    if (screenId === 'main-screen') {
+      const toolGrid = target.querySelector('.tool-grid');
+      if (toolGrid) toolGrid.classList.remove('hidden');
+    }
+  }
 }
 
 document.querySelectorAll('.tool-btn').forEach(btn => {
-  btn.addEventListener('click', () => showScreen(btn.dataset.target));
+  btn.addEventListener('click', () => {
+    const targetId = btn.getAttribute('data-target');
+    showScreen(targetId);
+  });
 });
 
 document.querySelectorAll('.back-btn').forEach(btn => {
@@ -20,8 +31,8 @@ document.getElementById('show-register').addEventListener('click', () => showScr
 document.getElementById('show-login').addEventListener('click', () => showScreen('login-screen'));
 
 document.getElementById('register-btn').addEventListener('click', async () => {
-  const user = document.getElementById('reg-username').value;
-  const pass = document.getElementById('reg-password').value;
+  const user = document.getElementById('reg-username').value.trim();
+  const pass = document.getElementById('reg-password').value.trim();
   if (!user || !pass) return alert("請輸入完整資訊");
   
   chrome.storage.local.set({ [`user_${user}`]: pass }, () => {
@@ -31,9 +42,11 @@ document.getElementById('register-btn').addEventListener('click', async () => {
 });
 
 document.getElementById('login-btn').addEventListener('click', async () => {
-  const user = document.getElementById('username').value;
-  const pass = document.getElementById('password').value;
+  const user = document.getElementById('username').value.trim();
+  const pass = document.getElementById('password').value.trim();
   
+  if (!user || !pass) return alert("請輸入帳號密碼");
+
   chrome.storage.local.get([`user_${user}`], (res) => {
     if (res[`user_${user}`] && res[`user_${user}`] === pass) {
       chrome.storage.local.set({ currentUser: user }, () => {
@@ -69,6 +82,7 @@ async function loadAllData() {
 
 function renderList(elementId, data, type) {
   const list = document.getElementById(elementId);
+  if (!list) return;
   list.innerHTML = '';
   data.forEach((item, index) => {
     const div = document.createElement('div');
@@ -188,15 +202,20 @@ document.querySelectorAll('.calc-btn').forEach(btn => {
 
 // Token 儲存
 document.getElementById('save-token').addEventListener('click', () => {
-  const token = document.getElementById('gh-token').value;
+  const token = document.getElementById('gh-token').value.trim();
   chrome.storage.local.set({ githubToken: token }, () => {
     alert("Token 已儲存並啟動雲端同步");
+    chrome.runtime.sendMessage({ type: "TOKEN_UPDATED", token: token });
   });
 });
 
 // 啟動檢查
 chrome.storage.local.get(['currentUser', 'githubToken'], (res) => {
-  if (res.currentUser) initApp(res.currentUser);
+  if (res.currentUser) {
+    initApp(res.currentUser);
+  } else {
+    showScreen('login-screen');
+  }
   if (res.githubToken) document.getElementById('gh-token').value = res.githubToken;
 });
 
@@ -212,4 +231,4 @@ fetch("https://api.github.com/repos/lan2015se-collab/opini/releases/latest")
         overlay.classList.remove('hidden');
       }
     }
-  });
+  }).catch(e => console.log('Version check failed:', e));

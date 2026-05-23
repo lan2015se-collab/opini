@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "opini",
-  "version": "2.7",
-  "description": "opini v2.7 - 智慧音樂與網址管理工具箱 (由 Ferz 維護)",
+  "version": "2.7.2",
+  "description": "opini v2.7.2 - 智慧音樂與網址管理工具箱 (由 Ferz 維護)",
   "permissions": [
     "storage",
     "tabs",

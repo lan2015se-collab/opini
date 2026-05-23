@@ -12,14 +12,21 @@ chrome.storage.local.get(['githubToken', 'currentUser'], (data) => {
   if (data.currentUser) currentUser = data.currentUser;
 });
 
-// 每 5 秒同步一次 (平衡效能與即時性)
+// 每 10 秒同步一次 (調整為更穩定的頻率)
 setInterval(async () => {
   if (currentUser && GITHUB_TOKEN && !isSyncing) {
     await syncDataToGitHub();
   }
-}, 5000);
+}, 10000);
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log('Background received message:', request);
+
+  if (request.type === "TOKEN_UPDATED") {
+    GITHUB_TOKEN = request.token;
+    return;
+  }
+
   if (request.type === "ANALYZE_MUSIC") {
     analyzeMusic(request.url);
     return;
@@ -35,7 +42,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   if (request.action === 'addToOpiniMusic') {
-    saveToMusic(request.title, request.url).then(() => sendResponse({ success: true }));
+    saveToMusic(request.title, request.url).then(() => {
+      sendResponse({ success: true });
+    }).catch(err => {
+      sendResponse({ success: false, error: err.message });
+    });
     return true;
   }
 });
@@ -54,7 +65,6 @@ async function analyzeMusic(url) {
   const music = res.music || [];
   const index = music.findIndex(m => m.url === url);
   if (index !== -1) {
-    // 這裡未來可整合 Spotify/Apple Music API 解析
     music[index].title = "🎵 " + music[index].title;
     await chrome.storage.local.set({ music });
   }
@@ -118,8 +128,9 @@ async function syncDataToGitHub() {
         sha: sha
       })
     });
+    console.log('GitHub Sync Success');
   } catch (e) {
-    console.error('同步失敗', e);
+    console.error('GitHub Sync Failed', e);
   } finally {
     isSyncing = false;
   }
