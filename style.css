@@ -1,176 +1,226 @@
-/* opini v2.7 專業黑底白字風格 - 同步官網字體 */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+:root {
+  --bg-color: #000000;
+  --text-color: #ffffff;
+  --primary-color: #0078d4;
+  --danger-color: #d83b01;
+  --card-bg: #111111;
+  --border-color: #333333;
 }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   width: 350px;
-  background-color: #000;
-  color: #fff;
-  padding: 15px;
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
 }
 
-h1, h2, h3, .download-btn {
-  font-family: 'Montserrat', sans-serif;
+#app {
+  padding: 20px;
+  min-height: 450px;
+  position: relative;
 }
 
-.hidden { display: none !important; }
+.page {
+  display: none;
+  animation: fadeIn 0.2s ease;
+}
+
+.page.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 .header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #333;
-  padding-bottom: 10px;
+  text-align: center;
+  margin-bottom: 25px;
 }
 
-.mini-logo { width: 24px; height: 24px; }
-h1, h3 { font-size: 1.2rem; }
-.version-tag { font-size: 0.7rem; background: #333; padding: 2px 6px; border-radius: 4px; }
+.logo {
+  width: 48px;
+  margin-bottom: 10px;
+}
 
-/* 登入與註冊介面 */
-.input-group { margin-bottom: 15px; }
+h1 { font-family: 'Montserrat', sans-serif; font-size: 24px; margin-bottom: 10px; }
+h2 { font-size: 18px; }
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
 input, textarea {
   width: 100%;
   background: #111;
-  border: 1px solid #333;
-  color: #fff;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 4px;
-  font-size: 0.9rem;
+  border: 1px solid var(--border-color);
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
 }
 
-.btn {
-  width: 100%;
-  padding: 10px;
+.primary-btn {
+  background: var(--primary-color);
+  color: white;
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  padding: 12px;
+  border-radius: 8px;
   font-weight: bold;
-  margin-bottom: 10px;
+  cursor: pointer;
+  width: 100%;
   transition: opacity 0.2s;
 }
 
-.btn.primary { background: #fff; color: #000; }
-.btn.secondary { background: #333; color: #fff; }
-.btn:hover { opacity: 0.8; }
+.secondary-btn {
+  background: #222;
+  color: white;
+  border: 1px solid #444;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 15px;
+  width: 100%;
+  cursor: pointer;
+}
 
-/* 工具箱網格 */
+.danger-btn {
+  background: var(--danger-color);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
+}
+
 .tool-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 12px;
 }
 
-.tool-btn {
-  background: #111;
-  border: 1px solid #333;
-  color: #fff;
-  padding: 15px 10px;
-  border-radius: 8px;
+.tool-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: white;
+  padding: 20px 10px;
+  border-radius: 12px;
+  text-align: center;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
+  transition: transform 0.2s, border-color 0.2s;
 }
 
-.tool-btn:hover { background: #222; border-color: #555; }
+.tool-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary-color);
+}
 
-/* 列表樣式 */
-.list {
-  max-height: 200px;
+.sub-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.item-list {
+  margin-top: 20px;
+  max-height: 300px;
   overflow-y: auto;
-  margin: 15px 0;
 }
 
-.item {
+.list-item {
   background: #111;
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 8px;
+  border-bottom: 1px solid #222;
+  padding: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-left: 3px solid #fff;
 }
 
-.item-info { flex: 1; cursor: pointer; }
-.item-title { font-weight: bold; font-size: 0.9rem; }
-.item-meta { font-size: 0.7rem; color: #aaa; }
+.item-name {
+  flex: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 10px;
+}
 
-.del-btn {
-  background: #ff4444;
-  color: white;
+.btn-delete {
+  background: #333;
+  color: #ff4444;
   border: none;
   padding: 4px 8px;
   border-radius: 4px;
+  font-size: 11px;
   cursor: pointer;
-  font-size: 0.7rem;
 }
 
-/* 計算機樣式 */
-.calc-display {
+.calculator {
   background: #111;
   padding: 15px;
-  text-align: right;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  border-radius: 12px;
 }
 
-#calc-history { font-size: 0.8rem; color: #666; height: 1.2rem; }
-#calc-result { font-size: 1.8rem; font-weight: bold; overflow: hidden; }
+#calc-display {
+  background: #000;
+  padding: 15px;
+  text-align: right;
+  font-size: 24px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
 
 .calc-buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 5px;
+  gap: 8px;
 }
 
 .calc-btn {
-  padding: 15px;
+  background: #222;
   border: none;
-  background: #222;
-  color: #fff;
-  font-size: 1.1rem;
-  border-radius: 4px;
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 18px;
 }
 
-.calc-btn.op { background: #333; }
-.calc-btn.equal { background: #fff; color: #000; grid-column: span 1; }
-.calc-btn:hover { background: #444; }
+.calc-btn.op { color: var(--primary-color); }
+.calc-btn.equal { background: var(--primary-color); }
 
-.back-btn {
+.footer-version {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  font-size: 10px;
+  color: #444;
+}
+
+.toggle-text {
   margin-top: 15px;
-  background: none;
-  border: 1px solid #333;
-  color: #aaa;
-  padding: 8px;
-  width: 100%;
-  cursor: pointer;
-}
-
-/* 更新遮罩 */
-#update-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.95);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 13px;
+  color: #888;
   text-align: center;
-  padding: 20px;
 }
 
-.update-content {
-  background: #222;
-  padding: 30px;
-  border-radius: 15px;
-  border: 1px solid #444;
+.toggle-text span {
+  color: var(--primary-color);
+  cursor: pointer;
 }
