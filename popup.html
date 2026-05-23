@@ -1,74 +1,138 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>opini v2.6</title>
+  <title>opini v2.7</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="auth-page" class="container">
-    <div class="header-main"><h2>opini 登入</h2></div>
+  <div id="update-overlay" class="hidden">
+    <div class="update-content">
+      <h2>有新版本可用 <span id="new-version"></span></h2>
+      <p>請立即刪除此擴充並重新下載！</p>
+      <a href="https://lan2015se-collab.github.io/opini/" target="_blank" class="btn download-btn">下載最新版本</a>
+    </div>
+  </div>
+
+  <div id="login-screen" class="screen">
+    <div class="header">
+      <img src="icons/icon48.png" alt="logo" class="mini-logo">
+      <h1>opini 登入</h1>
+    </div>
     <div class="input-group">
-      <label>使用者名稱：</label><input type="text" id="username" placeholder="輸入帳號...">
-      <label>密碼：</label><input type="password" id="password" placeholder="輸入密碼...">
-      <div style="display:flex; gap:10px; margin-top:10px;">
-        <button id="login-btn" style="flex:1;">登入</button>
-        <button id="register-btn" style="flex:1; background:#333; color:white;">註冊</button>
+      <input type="text" id="username" placeholder="使用者名稱">
+      <input type="password" id="password" placeholder="密碼">
+    </div>
+    <button id="login-btn" class="btn primary">登入</button>
+    <button id="show-register" class="btn secondary">還沒有帳號？註冊</button>
+  </div>
+
+  <div id="register-screen" class="screen hidden">
+    <div class="header">
+      <h1>opini 註冊</h1>
+    </div>
+    <div class="input-group">
+      <input type="text" id="reg-username" placeholder="新使用者名稱">
+      <input type="password" id="reg-password" placeholder="設定密碼">
+    </div>
+    <button id="register-btn" class="btn primary">完成註冊</button>
+    <button id="show-login" class="btn secondary">已有帳號？登入</button>
+  </div>
+
+  <div id="main-screen" class="screen hidden">
+    <div class="header">
+      <img src="icons/icon32.png" alt="logo" class="mini-logo">
+      <span id="display-user"></span>
+      <span class="version-tag">v2.7</span>
+    </div>
+    
+    <div class="tool-grid">
+      <button class="tool-btn" data-target="save-url">網址儲存</button>
+      <button class="tool-btn" data-target="opini-music">OpiniMusic</button>
+      <button class="tool-btn" data-target="clipboard">剪貼板</button>
+      <button class="tool-btn" data-target="opini-save">OpiniSave</button>
+      <button class="tool-btn" data-target="calculator">計算機</button>
+      <button class="tool-btn" data-target="settings">⚙️ 設定</button>
+    </div>
+
+    <!-- 網址儲存分頁 -->
+    <div id="save-url" class="tab-content hidden">
+      <h3>網址儲存</h3>
+      <input type="text" id="custom-name" placeholder="自定義名稱">
+      <button id="save-current" class="btn">儲存當前網頁</button>
+      <div id="url-list" class="list"></div>
+      <button class="back-btn">返回工具箱</button>
+    </div>
+
+    <!-- OpiniMusic 分頁 -->
+    <div id="opini-music" class="tab-content hidden">
+      <h3>OpiniMusic</h3>
+      <input type="text" id="music-url" placeholder="貼上 YouTube/Spotify/Apple 網址">
+      <button id="add-music" class="btn">儲存音樂</button>
+      <div id="music-list" class="list"></div>
+      <button class="back-btn">返回工具箱</button>
+    </div>
+
+    <!-- 剪貼板分頁 -->
+    <div id="clipboard" class="tab-content hidden">
+      <h3>剪貼板</h3>
+      <textarea id="clip-text" placeholder="輸入要儲存的文字或資訊..."></textarea>
+      <button id="save-clip" class="btn">儲存到剪貼板</button>
+      <div id="clip-list" class="list"></div>
+      <button class="back-btn">返回工具箱</button>
+    </div>
+
+    <!-- OpiniSave 分頁 -->
+    <div id="opini-save" class="tab-content hidden">
+      <h3>OpiniSave</h3>
+      <p style="font-size: 0.8rem; opacity: 0.7;">基於 YTSage 技術的影片保存工具</p>
+      <input type="text" id="ytsage-url" placeholder="輸入 YouTube 影片網址">
+      <button id="ytsage-save" class="btn">開始保存影片</button>
+      <div id="ytsage-list" class="list"></div>
+      <button class="back-btn">返回工具箱</button>
+    </div>
+
+    <!-- 計算機分頁 -->
+    <div id="calculator" class="tab-content hidden">
+      <div class="calc-display">
+        <div id="calc-history"></div>
+        <div id="calc-result">0</div>
       </div>
-      <p id="auth-error" style="color:red; font-size:12px; margin-top:10px; display:none;"></p>
-    </div>
-  </div>
-
-  <div id="main-menu" class="container" style="display:none;">
-    <div class="header-main">
-      <h2>opini 工具箱</h2>
-      <span class="version-tag">v2.6</span>
-    </div>
-    <div class="menu-grid">
-      <button class="menu-item" id="go-saver">📌 網址儲存</button>
-      <button class="menu-item" id="go-music">🎵 OpiniMusic</button>
-      <button class="menu-item" id="go-calc">🧮 計算機</button>
-      <button class="menu-item" id="go-settings" style="background:#222; color:white;">⚙️ GitHub 設定</button>
-      <button id="logout-btn" style="margin-top:10px; background:#ff0000; color:white;">登出</button>
-    </div>
-  </div>
-
-  <div id="settings-page" class="container" style="display:none;">
-    <div class="header-row"><button class="back-btn">⬅️</button><h2>GitHub 設定</h2></div>
-    <p style="font-size:12px; color:#ccc; margin-bottom:10px;">請貼入您的 GitHub Personal Access Token 以啟用雲端同步。</p>
-    <label>GitHub Token：</label>
-    <input type="password" id="github-token-input" placeholder="ghp_xxxxxxxxxxxx">
-    <button id="save-settings-btn">儲存設定</button>
-    <a href="https://github.com/settings/tokens/new?description=opini-sync&scopes=repo" target="_blank" style="font-size:12px; color:#0078d4; text-decoration:none; margin-top:10px; display:block;">👉 點此產生新的 Token</a>
-  </div>
-
-  <div id="saver-page" class="container" style="display:none;">
-    <div class="header-row"><button class="back-btn">⬅️</button><h2>網址儲存</h2></div>
-    <input type="text" id="custom-name" placeholder="顯示名稱...">
-    <textarea id="note-input" placeholder="備註..."></textarea>
-    <button id="save-btn">儲存網頁</button>
-    <div id="saved-list" class="scroll-list"></div>
-  </div>
-
-  <div id="music-page" class="container" style="display:none;">
-    <div class="header-row"><button class="back-btn">⬅️</button><h2>OpiniMusic</h2></div>
-    <div id="music-list" class="scroll-list"></div>
-  </div>
-
-  <div id="calc-page" class="container" style="display:none;">
-    <div class="header-row"><button class="back-btn">⬅️</button><h2>計算機</h2></div>
-    <div class="calculator">
-      <input type="text" id="calc-display" readonly value="0">
       <div class="calc-buttons">
-        <button class="calc-btn clear">C</button>
-        <button class="calc-btn backspace">⌫</button>
-        <button class="calc-btn operator">%</button>
-        <button class="calc-btn operator">/</button>
-        <button class="calc-btn">7</button><button class="calc-btn">8</button><button class="calc-btn">9</button><button class="calc-btn operator">*</button>
-        <button class="calc-btn">4</button><button class="calc-btn">5</button><button class="calc-btn">6</button><button class="calc-btn operator">-</button>
-        <button class="calc-btn">1</button><button class="calc-btn">2</button><button class="calc-btn">3</button><button class="calc-btn operator">+</button>
-        <button class="calc-btn plus-minus">±</button><button class="calc-btn">0</button><button class="calc-btn">.</button><button class="calc-btn equals">=</button>
+        <button class="calc-btn op" data-val="C">C</button>
+        <button class="calc-btn op" data-val="back">⌫</button>
+        <button class="calc-btn op" data-val="%">%</button>
+        <button class="calc-btn op" data-val="/">÷</button>
+        <button class="calc-btn" data-val="7">7</button>
+        <button class="calc-btn" data-val="8">8</button>
+        <button class="calc-btn" data-val="9">9</button>
+        <button class="calc-btn op" data-val="*">×</button>
+        <button class="calc-btn" data-val="4">4</button>
+        <button class="calc-btn" data-val="5">5</button>
+        <button class="calc-btn" data-val="6">6</button>
+        <button class="calc-btn op" data-val="-">-</button>
+        <button class="calc-btn" data-val="1">1</button>
+        <button class="calc-btn" data-val="2">2</button>
+        <button class="calc-btn" data-val="3">3</button>
+        <button class="calc-btn op" data-val="+">+</button>
+        <button class="calc-btn op" data-val="pm">±</button>
+        <button class="calc-btn" data-val="0">0</button>
+        <button class="calc-btn" data-val=".">.</button>
+        <button class="calc-btn equal" data-val="=">=</button>
       </div>
+      <button class="back-btn">返回工具箱</button>
+    </div>
+
+    <!-- 設定分頁 -->
+    <div id="settings" class="tab-content hidden">
+      <h3>GitHub 同步設定</h3>
+      <p style="font-size: 0.8rem; color: #aaa; margin-bottom: 10px;">資料儲存於: lan2015se-collab/opini-data</p>
+      <input type="password" id="gh-token" placeholder="GitHub Personal Access Token (ghp_...)">
+      <button id="save-token" class="btn">儲存 Token</button>
+      <a href="https://github.com/settings/tokens/new?scopes=repo&description=opini-sync" target="_blank" style="display: block; color: #0078d4; font-size: 0.8rem; margin-top: 10px;">👉 點此產生新的 Token (需勾選 repo)</a>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #333;">
+      <button id="logout-btn" class="btn secondary">登出帳號</button>
+      <button class="back-btn">返回工具箱</button>
     </div>
   </div>
 

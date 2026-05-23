@@ -6,29 +6,23 @@ let GITHUB_TOKEN = '';
 let currentUser = null;
 let isSyncing = false;
 
-// 初始化時從儲存空間讀取 Token
+// 初始化
 chrome.storage.local.get(['githubToken', 'currentUser'], (data) => {
   if (data.githubToken) GITHUB_TOKEN = data.githubToken;
   if (data.currentUser) currentUser = data.currentUser;
 });
 
-// 每秒同步一次資料
+// 每 5 秒同步一次 (平衡效能與即時性)
 setInterval(async () => {
   if (currentUser && GITHUB_TOKEN && !isSyncing) {
     await syncDataToGitHub();
   }
-}, 1000);
+}, 5000);
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'updateToken') {
-    GITHUB_TOKEN = request.token;
-    sendResponse({ success: true });
+  if (request.type === "ANALYZE_MUSIC") {
+    analyzeMusic(request.url);
     return;
-  }
-
-  if (request.action === 'login' || request.action === 'register') {
-    handleAuth(request).then(res => sendResponse(res));
-    return true;
   }
 
   if (request.action === 'getAiSummary') {
@@ -39,78 +33,70 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     });
     return true;
   }
-  
+
   if (request.action === 'addToOpiniMusic') {
-    chrome.storage.local.get(['opini_music'], (data) => {
-      const songs = data.opini_music || [];
-      if (!songs.some(s => s.url === request.url)) {
-        songs.unshift({ title: request.title, url: request.url, artist: 'YouTube' });
-        chrome.storage.local.set({ opini_music: songs }, () => {
-          sendResponse({ success: true });
-        });
-      } else {
-        sendResponse({ success: true });
-      }
-    });
+    saveToMusic(request.title, request.url).then(() => sendResponse({ success: true }));
     return true;
   }
 });
 
-async function handleAuth(data) {
-  const { username, password } = data;
-  if (data.action === 'register') {
-    currentUser = { username, password };
-    await chrome.storage.local.set({ currentUser });
-    if (GITHUB_TOKEN) await syncDataToGitHub(); 
-    return { success: true };
-  } else {
-    currentUser = { username, password };
-    if (GITHUB_TOKEN) {
-      const success = await pullDataFromGitHub();
-      if (success) {
-        await chrome.storage.local.set({ currentUser });
-        return { success: true };
-      }
-    } else {
-      // 若無 Token 則先本地登入
-      await chrome.storage.local.set({ currentUser });
-      return { success: true };
-    }
-    return { success: false, error: '登入失敗，請檢查 Token 或帳密' };
+async function saveToMusic(title, url) {
+  const res = await chrome.storage.local.get('music');
+  const music = res.music || [];
+  if (!music.some(m => m.url === url)) {
+    music.unshift({ title, url, date: new Date().toLocaleString() });
+    await chrome.storage.local.set({ music });
+  }
+}
+
+async function analyzeMusic(url) {
+  const res = await chrome.storage.local.get('music');
+  const music = res.music || [];
+  const index = music.findIndex(m => m.url === url);
+  if (index !== -1) {
+    // 這裡未來可整合 Spotify/Apple Music API 解析
+    music[index].title = "🎵 " + music[index].title;
+    await chrome.storage.local.set({ music });
   }
 }
 
 async function fetchSummary(prompt) {
-  const response = await fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${API_KEY}`
-    },
-    body: JSON.stringify({
-      model: 'gpt-3.5-turbo',
-      messages: [
-        { role: 'system', content: '你是一個專業的影片分析助手。請根據提供的資訊回答：發布者、影片時長、以及內容核心摘要。' },
-        { role: 'user', content: prompt }
-      ]
-    })
-  });
-  const data = await response.json();
-  return data.choices[0].message.content;
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          { role: 'system', content: '你是一個專業的影片分析助手。請根據提供的資訊回答：發布者、影片時長、以及內容核心摘要。' },
+          { role: 'user', content: prompt }
+        ]
+      })
+    });
+    const data = await response.json();
+    if (data.choices && data.choices[0] && data.choices[0].message) {
+      return data.choices[0].message.content;
+    }
+    throw new Error("API 回傳格式錯誤");
+  } catch (e) {
+    return "AI 總結暫時無法使用: " + e.message;
+  }
 }
 
 async function syncDataToGitHub() {
   if (!currentUser || !GITHUB_TOKEN) return;
   isSyncing = true;
   try {
-    const storage = await chrome.storage.local.get(['opini_links', 'opini_music']);
+    const storage = await chrome.storage.local.get(['urls', 'music', 'clips', 'ytsage']);
     const content = btoa(unescape(encodeURIComponent(JSON.stringify({
-      password: currentUser.password,
-      links: storage.opini_links || [],
-      music: storage.opini_music || []
+      user: currentUser,
+      data: storage
     }, null, 2))));
 
-    const path = `data/${currentUser.username}.json`;
+    const path = `data/${currentUser}.json`;
     const url = `https://api.github.com/repos/${GITHUB_DATA_REPO}/contents/${path}`;
     
     let sha = null;
@@ -127,7 +113,7 @@ async function syncDataToGitHub() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        message: `Sync for ${currentUser.username}`,
+        message: `Cloud Sync for ${currentUser}`,
         content: content,
         sha: sha
       })
@@ -137,25 +123,4 @@ async function syncDataToGitHub() {
   } finally {
     isSyncing = false;
   }
-}
-
-async function pullDataFromGitHub() {
-  if (!currentUser || !GITHUB_TOKEN) return false;
-  try {
-    const path = `data/${currentUser.username}.json`;
-    const url = `https://api.github.com/repos/${GITHUB_DATA_REPO}/contents/${path}`;
-    const res = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
-    if (res.ok) {
-      const data = await res.json();
-      const content = JSON.parse(decodeURIComponent(escape(atob(data.content))));
-      if (content.password === currentUser.password) {
-        await chrome.storage.local.set({
-          opini_links: content.links,
-          opini_music: content.music
-        });
-        return true;
-      }
-    }
-  } catch (e) {}
-  return false;
 }

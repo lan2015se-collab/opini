@@ -1,110 +1,215 @@
-document.addEventListener('DOMContentLoaded', async () => {
-  const authPage = document.getElementById('auth-page');
-  const mainMenu = document.getElementById('main-menu');
-  const saverPage = document.getElementById('saver-page');
-  const musicPage = document.getElementById('music-page');
-  const calcPage = document.getElementById('calc-page');
-  const settingsPage = document.getElementById('settings-page');
+const VERSION = "2.7";
 
-  // 檢查登入狀態
-  const { currentUser } = await chrome.storage.local.get(['currentUser']);
-  if (currentUser) showPage(mainMenu);
+// 介面切換邏輯
+function showScreen(screenId) {
+  document.querySelectorAll('.screen, .tab-content').forEach(s => s.classList.add('hidden'));
+  const target = document.getElementById(screenId);
+  if (target) target.classList.remove('hidden');
+}
 
-  function showPage(page) {
-    [authPage, mainMenu, saverPage, musicPage, calcPage, settingsPage].forEach(p => p.style.display = 'none');
-    page.style.display = 'flex';
-  }
+document.querySelectorAll('.tool-btn').forEach(btn => {
+  btn.addEventListener('click', () => showScreen(btn.dataset.target));
+});
 
-  // 登入與註冊
-  document.getElementById('login-btn').onclick = () => {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    chrome.runtime.sendMessage({ action: 'login', username, password }, (res) => {
-      if (res.success) showPage(mainMenu);
-      else showError(res.error);
-    });
-  };
+document.querySelectorAll('.back-btn').forEach(btn => {
+  btn.addEventListener('click', () => showScreen('main-screen'));
+});
 
-  document.getElementById('register-btn').onclick = () => {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    chrome.runtime.sendMessage({ action: 'register', username, password }, (res) => {
-      if (res.success) showPage(mainMenu);
-    });
-  };
+// 帳號系統
+document.getElementById('show-register').addEventListener('click', () => showScreen('register-screen'));
+document.getElementById('show-login').addEventListener('click', () => showScreen('login-screen'));
 
-  document.getElementById('logout-btn').onclick = async () => {
-    await chrome.storage.local.remove(['currentUser']);
-    showPage(authPage);
-  };
+document.getElementById('register-btn').addEventListener('click', async () => {
+  const user = document.getElementById('reg-username').value;
+  const pass = document.getElementById('reg-password').value;
+  if (!user || !pass) return alert("請輸入完整資訊");
+  
+  chrome.storage.local.set({ [`user_${user}`]: pass }, () => {
+    alert("註冊成功！請登入");
+    showScreen('login-screen');
+  });
+});
 
-  function showError(msg) {
-    const err = document.getElementById('auth-error');
-    err.textContent = msg;
-    err.style.display = 'block';
-  }
+document.getElementById('login-btn').addEventListener('click', async () => {
+  const user = document.getElementById('username').value;
+  const pass = document.getElementById('password').value;
+  
+  chrome.storage.local.get([`user_${user}`], (res) => {
+    if (res[`user_${user}`] && res[`user_${user}`] === pass) {
+      chrome.storage.local.set({ currentUser: user }, () => {
+        initApp(user);
+      });
+    } else {
+      alert("帳號或密碼錯誤");
+    }
+  });
+});
 
-  // 設定頁面邏輯
-  const tokenInput = document.getElementById('github-token-input');
-  const { githubToken } = await chrome.storage.local.get(['githubToken']);
-  if (githubToken) tokenInput.value = githubToken;
+document.getElementById('logout-btn').addEventListener('click', () => {
+  chrome.storage.local.remove('currentUser', () => {
+    location.reload();
+  });
+});
 
-  document.getElementById('save-settings-btn').onclick = async () => {
-    const token = tokenInput.value.trim();
-    await chrome.storage.local.set({ githubToken: token });
-    chrome.runtime.sendMessage({ action: 'updateToken', token: token });
-    alert('GitHub Token 已儲存並套用！');
-    showPage(mainMenu);
-  };
+// 初始化應用
+function initApp(user) {
+  document.getElementById('display-user').innerText = `你好, ${user}`;
+  showScreen('main-screen');
+  loadAllData();
+}
 
-  // 頁面切換按鈕
-  document.getElementById('go-saver').onclick = () => showPage(saverPage);
-  document.getElementById('go-music').onclick = () => { showPage(musicPage); updateMusicList(); };
-  document.getElementById('go-calc').onclick = () => showPage(calcPage);
-  document.getElementById('go-settings').onclick = () => showPage(settingsPage);
-  document.querySelectorAll('.back-btn').forEach(btn => btn.onclick = () => showPage(mainMenu));
+// 資料加載與渲染
+async function loadAllData() {
+  const res = await chrome.storage.local.get(['urls', 'music', 'clips', 'ytsage']);
+  renderList('url-list', res.urls || [], 'urls');
+  renderList('music-list', res.music || [], 'music');
+  renderList('clip-list', res.clips || [], 'clips');
+  renderList('ytsage-list', res.ytsage || [], 'ytsage');
+}
 
-  // 網址儲存邏輯
-  const savedList = document.getElementById('saved-list');
-  const updateSaverList = async () => {
-    const { opini_links = [] } = await chrome.storage.local.get(['opini_links']);
-    savedList.innerHTML = opini_links.map(link => `
-      <div class="saved-item"><a href="${link.url}" target="_blank">${link.displayName}</a></div>
-    `).join('');
-  };
-
-  document.getElementById('save-btn').onclick = async () => {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    const name = document.getElementById('custom-name').value || tab.title;
-    const { opini_links = [] } = await chrome.storage.local.get(['opini_links']);
-    opini_links.unshift({ displayName: name, url: tab.url });
-    await chrome.storage.local.set({ opini_links });
-    updateSaverList();
-  };
-
-  // 音樂清單邏輯
-  const musicList = document.getElementById('music-list');
-  const updateMusicList = async () => {
-    const { opini_music = [] } = await chrome.storage.local.get(['opini_music']);
-    musicList.innerHTML = opini_music.map(song => `
-      <div class="music-item"><a href="${song.url}" target="_blank">${song.title}</a></div>
-    `).join('');
-  };
-
-  // 計算機邏輯
-  const calcDisplay = document.getElementById('calc-display');
-  document.querySelectorAll('.calc-btn').forEach(btn => {
-    btn.onclick = () => {
-      const val = btn.textContent;
-      if (val === 'C') calcDisplay.value = '0';
-      else if (val === '=') {
-        try { calcDisplay.value = eval(calcDisplay.value); } catch(e) { calcDisplay.value = 'Error'; }
-      } else {
-        if (calcDisplay.value === '0') calcDisplay.value = val;
-        else calcDisplay.value += val;
+function renderList(elementId, data, type) {
+  const list = document.getElementById(elementId);
+  list.innerHTML = '';
+  data.forEach((item, index) => {
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.innerHTML = `
+      <div class="item-info">
+        <div class="item-title">${item.title || item.text || '未命名'}</div>
+        <div class="item-meta">${item.url || ''}</div>
+      </div>
+      <button class="del-btn" data-index="${index}">刪除</button>
+    `;
+    div.querySelector('.item-info').onclick = () => {
+      if (item.url) chrome.tabs.create({ url: item.url });
+      if (item.text) {
+        navigator.clipboard.writeText(item.text);
+        alert("已複製到剪貼板");
       }
     };
+    div.querySelector('.del-btn').onclick = (e) => {
+      e.stopPropagation();
+      deleteItem(type, index);
+    };
+    list.appendChild(div);
   });
+}
 
-  updateSaverList();
+async function deleteItem(type, index) {
+  const res = await chrome.storage.local.get(type);
+  const data = res[type] || [];
+  data.splice(index, 1);
+  await chrome.storage.local.set({ [type]: data });
+  loadAllData();
+}
+
+// 各功能儲存邏輯
+document.getElementById('save-current').addEventListener('click', async () => {
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  const customName = document.getElementById('custom-name').value;
+  const newUrl = { title: customName || tabs[0].title, url: tabs[0].url };
+  
+  const res = await chrome.storage.local.get('urls');
+  const urls = res.urls || [];
+  urls.push(newUrl);
+  await chrome.storage.local.set({ urls });
+  document.getElementById('custom-name').value = '';
+  loadAllData();
 });
+
+document.getElementById('add-music').addEventListener('click', async () => {
+  const url = document.getElementById('music-url').value;
+  if (!url) return;
+  const newMusic = { title: "音樂解析中...", url: url };
+  const res = await chrome.storage.local.get('music');
+  const music = res.music || [];
+  music.push(newMusic);
+  await chrome.storage.local.set({ music });
+  document.getElementById('music-url').value = '';
+  loadAllData();
+  chrome.runtime.sendMessage({ type: "ANALYZE_MUSIC", url: url });
+});
+
+document.getElementById('save-clip').addEventListener('click', async () => {
+  const text = document.getElementById('clip-text').value;
+  if (!text) return;
+  const newClip = { text: text, date: new Date().toLocaleString() };
+  const res = await chrome.storage.local.get('clips');
+  const clips = res.clips || [];
+  clips.push(newClip);
+  await chrome.storage.local.set({ clips });
+  document.getElementById('clip-text').value = '';
+  loadAllData();
+});
+
+document.getElementById('ytsage-save').addEventListener('click', async () => {
+  const url = document.getElementById('ytsage-url').value;
+  if (!url) return;
+  const newItem = { title: "YTSage 保存中...", url: url };
+  const res = await chrome.storage.local.get('ytsage');
+  const ytsage = res.ytsage || [];
+  ytsage.push(newItem);
+  await chrome.storage.local.set({ ytsage });
+  document.getElementById('ytsage-url').value = '';
+  loadAllData();
+});
+
+// 計算機邏輯
+let calcValue = "0";
+let calcHistory = "";
+const calcResultEl = document.getElementById('calc-result');
+const calcHistoryEl = document.getElementById('calc-history');
+
+document.querySelectorAll('.calc-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const val = btn.dataset.val;
+    if (val === 'C') {
+      calcValue = "0";
+      calcHistory = "";
+    } else if (val === 'back') {
+      calcValue = calcValue.length > 1 ? calcValue.slice(0, -1) : "0";
+    } else if (val === '=') {
+      try {
+        calcHistory = calcValue;
+        calcValue = eval(calcValue.replace('×', '*').replace('÷', '/')).toString();
+      } catch {
+        calcValue = "Error";
+      }
+    } else if (val === 'pm') {
+      calcValue = (parseFloat(calcValue) * -1).toString();
+    } else {
+      if (calcValue === "0" && !isNaN(val)) calcValue = val;
+      else calcValue += val;
+    }
+    calcResultEl.innerText = calcValue;
+    calcHistoryEl.innerText = calcHistory;
+  });
+});
+
+// Token 儲存
+document.getElementById('save-token').addEventListener('click', () => {
+  const token = document.getElementById('gh-token').value;
+  chrome.storage.local.set({ githubToken: token }, () => {
+    alert("Token 已儲存並啟動雲端同步");
+  });
+});
+
+// 啟動檢查
+chrome.storage.local.get(['currentUser', 'githubToken'], (res) => {
+  if (res.currentUser) initApp(res.currentUser);
+  if (res.githubToken) document.getElementById('gh-token').value = res.githubToken;
+});
+
+// 版本檢查
+fetch("https://api.github.com/repos/lan2015se-collab/opini/releases/latest")
+  .then(r => r.json())
+  .then(data => {
+    if (data.tag_name && data.tag_name !== `v${VERSION}`) {
+      const overlay = document.getElementById('update-overlay');
+      const verSpan = document.getElementById('new-version');
+      if (overlay && verSpan) {
+        verSpan.innerText = data.tag_name;
+        overlay.classList.remove('hidden');
+      }
+    }
+  });

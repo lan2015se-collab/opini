@@ -1,39 +1,163 @@
-body {
-  width: 350px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  padding: 0;
+/* opini v2.7 專業黑底白字風格 */
+* {
   margin: 0;
-  background-color: #000000;
-  color: #ffffff;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "DFKai-SB", "標楷體", serif;
 }
 
-.container { padding: 15px; display: flex; flex-direction: column; }
-.header-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #ffffff; padding-bottom: 10px; }
-.version-tag { font-size: 10px; background: #333; padding: 2px 6px; border-radius: 4px; }
+body {
+  width: 350px;
+  background-color: #000;
+  color: #fff;
+  padding: 15px;
+}
 
-input, textarea, button {
-  font-family: inherit;
+.hidden { display: none !important; }
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
+}
+
+.mini-logo { width: 24px; height: 24px; }
+h1, h3 { font-size: 1.2rem; }
+.version-tag { font-size: 0.7rem; background: #333; padding: 2px 6px; border-radius: 4px; }
+
+/* 登入與註冊介面 */
+.input-group { margin-bottom: 15px; }
+input, textarea {
   width: 100%;
+  background: #111;
+  border: 1px solid #333;
+  color: #fff;
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 4px;
-  box-sizing: border-box;
 }
 
-input, textarea { background: #111; border: 1px solid #444; color: white; }
-button { background: white; color: black; border: none; font-weight: bold; cursor: pointer; }
-button:hover { background: #ccc; }
+.btn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 10px;
+  transition: opacity 0.2s;
+}
 
-.menu-grid { display: grid; gap: 10px; }
-.menu-item { text-align: left; padding: 15px; border: 1px solid #ffffff; background: black; color: white; }
-.menu-item:hover { background: #222; }
+.btn.primary { background: #fff; color: #000; }
+.btn.secondary { background: #333; color: #fff; }
+.btn:hover { opacity: 0.8; }
 
-.scroll-list { max-height: 250px; overflow-y: auto; }
-.saved-item, .music-item { border-bottom: 1px solid #333; padding: 10px 0; }
-.saved-item a, .music-item a { color: white; text-decoration: none; font-size: 14px; }
+/* 工具箱網格 */
+.tool-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 15px;
+}
 
-.calculator { border: 1px solid #ffffff; padding: 10px; border-radius: 8px; }
-#calc-display { font-size: 24px; text-align: right; border: none; border-bottom: 1px solid #333; margin-bottom: 10px; }
-.calc-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
-.calc-btn { height: 50px; padding: 0; display: flex; align-items: center; justify-content: center; background: #222; color: white; border: 1px solid #444; }
-.calc-btn.operator { background: white; color: black; }
+.tool-btn {
+  background: #111;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 15px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.tool-btn:hover { background: #222; border-color: #555; }
+
+/* 列表樣式 */
+.list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin: 15px 0;
+}
+
+.item {
+  background: #111;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 3px solid #fff;
+}
+
+.item-info { flex: 1; cursor: pointer; }
+.item-title { font-weight: bold; font-size: 0.9rem; }
+.item-meta { font-size: 0.7rem; color: #aaa; }
+
+.del-btn {
+  background: #ff4444;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.7rem;
+}
+
+/* 計算機樣式 */
+.calc-display {
+  background: #111;
+  padding: 15px;
+  text-align: right;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+#calc-history { font-size: 0.8rem; color: #666; height: 1.2rem; }
+#calc-result { font-size: 1.8rem; font-weight: bold; overflow: hidden; }
+
+.calc-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+}
+
+.calc-btn {
+  padding: 15px;
+  border: none;
+  background: #222;
+  color: #fff;
+  font-size: 1.1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.calc-btn.op { background: #333; }
+.calc-btn.equal { background: #fff; color: #000; grid-column: span 1; }
+.calc-btn:hover { background: #444; }
+
+.back-btn {
+  margin-top: 15px;
+  background: none;
+  border: 1px solid #333;
+  color: #aaa;
+  padding: 8px;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* 更新遮罩 */
+#update-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.95);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
