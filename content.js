@@ -1,90 +1,114 @@
-// YouTube 內容腳本：在訂閱按鈕旁注入 opini 按鈕
-
-function injectOpiniButton() {
-  // 等待 YouTube 頁面完全載入
+function injectOpiniButtons() {
   const checkAndInject = setInterval(() => {
-    // 尋找訂閱按鈕容器 (通常在頻道名稱旁邊)
     const subscribeBtn = document.querySelector('yt-formatted-string[aria-label*="訂閱"]') || 
                          document.querySelector('button[aria-label*="Subscribe"]') ||
                          document.querySelector('button[aria-label*="訂閱"]');
     
-    if (subscribeBtn && !document.getElementById('opini-add-btn')) {
-      // 找到訂閱按鈕，在其旁邊插入 opini 按鈕
+    if (subscribeBtn && !document.getElementById('opini-btn-group')) {
       const container = subscribeBtn.closest('div[class*="style-scope"]') || subscribeBtn.parentElement;
       
       if (container) {
-        const opiniBtn = document.createElement('button');
-        opiniBtn.id = 'opini-add-btn';
-        opiniBtn.setAttribute('aria-label', '新增到 OpiniMusic');
-        opiniBtn.style.cssText = `
-          background: #ff0000;
-          color: white;
-          border: none;
-          padding: 10px 16px;
-          border-radius: 20px;
-          font-weight: 500;
-          cursor: pointer;
-          font-size: 14px;
-          margin-left: 8px;
-          transition: background 0.2s;
-        `;
-        opiniBtn.textContent = '新增到 OpiniMusic';
-        
-        opiniBtn.onmouseover = () => { opiniBtn.style.background = '#cc0000'; };
-        opiniBtn.onmouseout = () => { opiniBtn.style.background = '#ff0000'; };
-        
-        opiniBtn.onclick = () => {
-          const title = document.querySelector('h1.title yt-formatted-string')?.textContent || 
-                        document.querySelector('h1 yt-formatted-string')?.textContent ||
-                        document.title.replace(' - YouTube', '');
-          const url = window.location.href;
-          
-          // 傳送訊息給背景腳本儲存資料
+        const btnGroup = document.createElement('div');
+        btnGroup.id = 'opini-btn-group';
+        btnGroup.style.display = 'inline-flex';
+        btnGroup.style.marginLeft = '8px';
+        btnGroup.style.gap = '8px';
+
+        // 按鈕 1: 新增到 OpiniMusic
+        const addBtn = document.createElement('button');
+        addBtn.textContent = '新增到 OpiniMusic';
+        styleButton(addBtn, '#ff0000');
+        addBtn.onclick = () => {
+          const title = getYTTitle();
           chrome.runtime.sendMessage({
             action: 'addToOpiniMusic',
             title: title,
-            url: url
-          }, (response) => {
-            if (response && response.success) {
-              // 按鈕變綠色表示成功
-              opiniBtn.style.background = '#00cc00';
-              opiniBtn.textContent = '✓ 已新增';
+            url: window.location.href
+          }, (res) => {
+            if (res.success) {
+              addBtn.textContent = '✓ 已新增';
+              addBtn.style.background = '#00cc00';
               setTimeout(() => {
-                opiniBtn.style.background = '#ff0000';
-                opiniBtn.textContent = '新增到 OpiniMusic';
+                addBtn.textContent = '新增到 OpiniMusic';
+                styleButton(addBtn, '#ff0000');
               }, 2000);
             }
           });
         };
-        
-        container.appendChild(opiniBtn);
+
+        // 按鈕 2: AI 總結
+        const summaryBtn = document.createElement('button');
+        summaryBtn.textContent = 'AI 總結';
+        styleButton(summaryBtn, '#0078d4');
+        summaryBtn.onclick = () => {
+          const title = getYTTitle();
+          const channel = document.querySelector('yt-formatted-string.ytd-channel-name a')?.textContent || '未知發布者';
+          const duration = document.querySelector('.ytp-time-duration')?.textContent || '未知時長';
+          
+          showModal('AI 正在分析影片內容...', true);
+          
+          const prompt = `影片標題: ${title}\n發布者: ${channel}\n影片時長: ${duration}\n請根據以上資訊總結這部影片。`;
+          
+          chrome.runtime.sendMessage({ action: 'getAiSummary', prompt: prompt }, (res) => {
+            if (res.success) {
+              showModal(res.summary, false);
+            } else {
+              showModal('分析失敗: ' + res.error, false);
+            }
+          });
+        };
+
+        btnGroup.appendChild(addBtn);
+        btnGroup.appendChild(summaryBtn);
+        container.appendChild(btnGroup);
         clearInterval(checkAndInject);
       }
     }
   }, 500);
-  
-  // 最多檢查 30 次 (15 秒)
-  let attempts = 0;
-  const originalInterval = setInterval;
-  let intervalId = checkAndInject;
-  
-  setTimeout(() => {
-    clearInterval(intervalId);
-  }, 15000);
 }
 
-// 頁面載入時執行
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', injectOpiniButton);
-} else {
-  injectOpiniButton();
+function styleButton(btn, color) {
+  btn.style.cssText = `
+    background: ${color};
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 14px;
+    transition: opacity 0.2;
+  `;
+  btn.onmouseover = () => btn.style.opacity = '0.8';
+  btn.onmouseout = () => btn.style.opacity = '1';
 }
 
-// 監聽動態頁面變化 (YouTube 使用動態加載)
+function getYTTitle() {
+  return document.querySelector('h1.title yt-formatted-string')?.textContent || 
+         document.querySelector('h1 yt-formatted-string')?.textContent ||
+         document.title.replace(' - YouTube', '');
+}
+
+function showModal(content, isLoading) {
+  let modal = document.getElementById('opini-summary-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'opini-summary-modal';
+    document.body.appendChild(modal);
+  }
+  
+  modal.innerHTML = `
+    <h3>🎬 影片 AI 總結</h3>
+    <div id="opini-summary-content">${content.replace(/\n/g, '<br>')}</div>
+    ${isLoading ? '<p style="text-align:center;">⏳ 請稍候...</p>' : '<button class="opini-close-btn" onclick="document.getElementById(\'opini-summary-modal\').remove()">關閉</button>'}
+  `;
+}
+
+// 監聽頁面變化
 const observer = new MutationObserver(() => {
-  if (!document.getElementById('opini-add-btn')) {
-    injectOpiniButton();
+  if (!document.getElementById('opini-btn-group')) {
+    injectOpiniButtons();
   }
 });
-
 observer.observe(document.body, { childList: true, subtree: true });
+injectOpiniButtons();

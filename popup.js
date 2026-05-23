@@ -1,4 +1,4 @@
-const CURRENT_VERSION = '2.3';
+const CURRENT_VERSION = '2.4';
 
 document.addEventListener('DOMContentLoaded', async () => {
   // --- 版本檢查系統 ---
@@ -14,25 +14,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (e) { console.log('版本檢查失敗', e); }
   };
   checkVersion();
-
-  // 監聽來自內容腳本 (YouTube 按鈕) 的訊息
-  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === 'addToOpiniMusic') {
-      saveMusic(request.title, request.url);
-      sendResponse({ success: true });
-    }
-  });
-
-  const saveMusic = async (title, url) => {
-    const data = await chrome.storage.local.get(['opini_music']);
-    const songs = data.opini_music || [];
-    // 檢查是否重複
-    if (!songs.some(s => s.url === url)) {
-      songs.unshift({ title: title, url: url, artist: 'YouTube' });
-      await chrome.storage.local.set({ opini_music: songs });
-      if (musicPage.style.display !== 'none') updateMusicList();
-    }
-  };
 
   // 頁面切換
   const mainMenu = document.getElementById('main-menu');
@@ -192,7 +173,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   analyzeBtn.onclick = async () => {
     const url = musicUrlInput.value.trim();
     if (!url) return;
-    await saveMusic('手動新增歌曲', url);
+    const data = await chrome.storage.local.get(['opini_music']);
+    const songs = data.opini_music || [];
+    songs.unshift({ title: '手動新增歌曲', url: url, artist: '未知' });
+    await chrome.storage.local.set({ opini_music: songs });
     musicUrlInput.value = '';
     updateMusicList();
   };

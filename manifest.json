@@ -1,12 +1,13 @@
 {
   "manifest_version": 3,
   "name": "opini",
-  "version": "2.3",
-  "description": "綜合網址、音樂管理與工具箱擴充功能 (v2.3)",
+  "version": "2.4",
+  "description": "綜合網址、音樂管理與 AI 影片總結工具箱 (v2.4)",
   "permissions": ["storage", "tabs", "activeTab"],
   "host_permissions": [
     "https://api.github.com/*",
-    "https://www.youtube.com/*"
+    "https://www.youtube.com/*",
+    "https://free.v36.cm/*"
   ],
   "action": {
     "default_popup": "popup.html"
@@ -14,7 +15,11 @@
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/watch*"],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "css": ["content.css"]
     }
-  ]
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
 }

@@ -1,0 +1,40 @@
+#opini-summary-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background: #1a1a1a;
+  color: white;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  z-index: 99999;
+  font-family: sans-serif;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+#opini-summary-modal h3 {
+  margin-top: 0;
+  border-bottom: 1px solid #444;
+  padding-bottom: 10px;
+}
+
+#opini-summary-content {
+  margin: 15px 0;
+  line-height: 1.6;
+  font-size: 14px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.opini-close-btn {
+  background: #ffffff;
+  color: #000000;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+  font-weight: bold;
+}
