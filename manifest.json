@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "opini",
-  "version": "2.2",
+  "version": "2.3",
   "description": "綜合網址、音樂管理與工具箱擴充功能",
   "permissions": ["storage", "tabs", "activeTab"],
   "host_permissions": [
@@ -10,5 +10,11 @@
   ],
   "action": {
     "default_popup": "popup.html"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/watch*"],
+      "js": ["content.js"]
+    }
+  ]
 }

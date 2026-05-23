@@ -3,66 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>opini v2.2 - 綜合工具箱</title>
+    <title>opini v2.3 - 專業整合工具箱</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; color: #333; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
-        header { background: rgba(0, 0, 0, 0.7); color: white; padding: 2rem 0; text-align: center; border-bottom: 3px solid #667eea; }
-        .version-badge { display: inline-block; background: #ff6b6b; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.9rem; margin-left: 1rem; }
-        .container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
-        .hero { background: white; border-radius: 10px; padding: 3rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); text-align: center; }
-        .download-btn { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem 2.5rem; border-radius: 50px; text-decoration: none; font-size: 1.1rem; font-weight: bold; box-shadow: 0 5px 15px rgba(102,126,234,0.4); }
-        .changelog { background: #f0f7ff; border-left: 4px solid #0078d4; padding: 1.5rem; border-radius: 5px; margin-bottom: 2rem; }
-        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
-        .feature-card { background: white; padding: 2rem; border-radius: 10px; border-top: 4px solid #667eea; }
-        .installation { background: white; border-radius: 10px; padding: 3rem; margin-top: 2rem; }
-        footer { background: rgba(0, 0, 0, 0.7); color: white; text-align: center; padding: 2rem; margin-top: 3rem; }
-        .code-block { background: #f5f5f5; border-left: 4px solid #667eea; padding: 1rem; margin: 1rem 0; font-family: monospace; border-radius: 5px; }
+        body { font-family: "DFKai-SB", "標楷體", serif; line-height: 1.6; color: #ffffff; background: #000000; min-height: 100vh; }
+        header { background: #000000; border-bottom: 2px solid #ffffff; padding: 3rem 0; text-align: center; }
+        .version-badge { display: inline-block; background: #ffffff; color: #000000; padding: 0.3rem 1rem; border-radius: 4px; font-size: 1rem; margin-top: 1rem; font-weight: bold; }
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+        .hero { border: 1px solid #ffffff; padding: 3rem; margin-bottom: 3rem; text-align: center; background: #111; }
+        .download-btn { display: inline-block; background: #ffffff; color: #000000; padding: 1.2rem 3rem; border-radius: 4px; text-decoration: none; font-size: 1.2rem; font-weight: bold; transition: all 0.3s; }
+        .download-btn:hover { background: #cccccc; }
+        .feature-section { margin-bottom: 4rem; }
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .feature-card { border: 1px solid #ffffff; padding: 2rem; }
+        .installation { border: 1px solid #ffffff; padding: 3rem; margin-top: 2rem; }
+        .step { margin-bottom: 2rem; }
+        .step h3 { margin-bottom: 1rem; border-left: 4px solid #ffffff; padding-left: 1rem; }
+        footer { border-top: 2px solid #ffffff; padding: 3rem; text-align: center; margin-top: 4rem; }
+        a { color: #ffffff; }
     </style>
 </head>
 <body>
     <header>
-        <h1>📌 opini <span class="version-badge">v2.2</span></h1>
-        <p>專業網址管理、音樂播放與全功能計算機</p>
+        <h1>📌 opini</h1>
+        <div class="version-badge">v2.3 專業版</div>
+        <p style="margin-top: 1rem;">YouTube 深度整合 | 黑底白字標楷體風格</p>
     </header>
     <div class="container">
         <div class="hero">
-            <h2>體驗更專業的工具箱</h2>
-            <p>opini v2.2 導入了標準 YouTube 嵌入格式與強大的全功能計算機，修復所有運算錯誤。</p>
-            <a href="https://github.com/lan2015se-collab/opini/releases/download/v2.2/opini_v2.2.zip" class="download-btn">⬇️ 立即下載 opini v2.2 (ZIP)</a>
+            <h2>純粹、高效、整合</h2>
+            <p style="margin-bottom: 2rem;">opini v2.3 導入 YouTube 注入按鈕功能，讓音樂管理與網頁收藏合而為一。</p>
+            <a href="https://github.com/lan2015se-collab/opini/releases/download/v2.3/opini_v2.3.zip" class="download-btn">⬇️ 立即下載 opini v2.3 (ZIP)</a>
         </div>
-        <div class="changelog">
-            <h3>✨ v2.2 更新重點</h3>
-            <ul>
-                <li><strong>📺 標準播放器</strong>：採用官方嵌入格式，支援自動播放、陀螺儀與畫中畫。</li>
-                <li><strong>🧮 全功能計算機</strong>：新增 %、±、⌫ 按鈕，修復運算邏輯與錯誤顯示。</li>
-                <li><strong>🛡️ 穩定性優化</strong>：優化版本檢測與跨網域解析邏輯。</li>
-            </ul>
+        
+        <div class="feature-section">
+            <h2 style="margin-bottom: 2rem; text-align: center;">核心功能</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🔴 YouTube 整合</h3>
+                    <p>在 YouTube 影片頁面直接新增按鈕，一鍵提取資訊並儲存至管理清單。</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🌑 黑底白字風格</h3>
+                    <p>全介面採用標楷體與高對比設計，回歸最原始的文字美感。</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📌 網址收藏</h3>
+                    <p>支援自定義名稱與備註，完美管理您的網頁參考資料。</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🧮 綜合工具箱</h3>
+                    <p>內建全功能計算機，滿足日常運算需求。</p>
+                </div>
+            </div>
         </div>
-        <div class="features">
-            <div class="feature-card">
-                <h3>📌 網址儲存</h3>
-                <p>快速紀錄網址、設定名稱與備註，資料本地儲存安全無虞。</p>
-            </div>
-            <div class="feature-card">
-                <h3>🎵 OpiniMusic</h3>
-                <p>支援 YouTube 專業播放模式與各大音樂平台網址解析。</p>
-            </div>
-            <div class="feature-card">
-                <h3>🧮 專業計算機</h3>
-                <p>深色模式設計，功能齊全且運算精確，滿足日常所有計算需求。</p>
-            </div>
-        </div>
+
         <div class="installation">
-            <h2>📖 安裝指南</h2>
-            <p>1. 下載 <code>opini_v2.2.zip</code> 並解壓縮。</p>
-            <p>2. 在瀏覽器網址列輸入 <code>edge://extensions/</code> (Edge) 或 <code>chrome://extensions/</code> (Chrome)。</p>
-            <p>3. 開啟「開發人員模式」，點擊「載入解壓縮的擴充功能」，選擇解壓後的<strong>資料夾</strong>。</p>
+            <h2>📖 安裝與使用指南</h2>
+            <div class="step">
+                <h3>1. 下載與解壓</h3>
+                <p>下載 <code>opini_v2.3.zip</code> 並將其解壓縮至一個固定資料夾。</p>
+            </div>
+            <div class="step">
+                <h3>2. 載入擴充功能</h3>
+                <p>在 Edge 或 Chrome 的擴充功能頁面開啟「開發人員模式」，選擇「載入解壓縮的擴充功能」並選取該資料夾。</p>
+            </div>
+            <div class="step">
+                <h3>3. YouTube 整合使用</h3>
+                <p>前往任何 YouTube 影片頁面，在「訂閱」按鈕旁即可看到「新增到 OpiniMusic」按鈕。</p>
+            </div>
         </div>
     </div>
     <footer>
-        <p>由 <a href="https://eblog-ferz.lovable.app" style="color: #667eea; text-decoration: underline; font-weight: bold;">Ferz</a> 建立與維護</p>
-        <p>© 2026 opini. All rights reserved.</p>
+        <p>由 <a href="https://eblog-ferz.lovable.app" style="font-weight: bold; text-decoration: underline;">Ferz</a> 建立與維護</p>
+        <p style="margin-top: 1rem; opacity: 0.6;">© 2026 opini. All rights reserved.</p>
     </footer>
 </body>
 </html>

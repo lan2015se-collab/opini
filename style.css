@@ -1,9 +1,10 @@
 body {
   width: 350px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: "DFKai-SB", "標楷體", serif; /* 強制使用標楷體 */
   padding: 0;
   margin: 0;
-  background-color: #f4f4f7;
+  background-color: #000000; /* 黑色背景 */
+  color: #ffffff; /* 白色文字 */
 }
 
 .container {
@@ -17,27 +18,25 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
+  border-bottom: 1px solid #ffffff;
+  padding-bottom: 10px;
 }
 
 .version-tag {
   font-size: 10px;
-  background: #ddd;
+  background: #333;
   padding: 2px 6px;
-  border-radius: 10px;
-  color: #666;
+  border-radius: 4px;
+  color: #fff;
 }
 
-h2 {
+h2, h3 {
   margin: 0;
-  color: #333;
-  font-size: 18px;
+  color: #ffffff;
 }
 
-h3 {
-  font-size: 14px;
-  margin: 10px 0;
-  color: #555;
-}
+h2 { font-size: 20px; }
+h3 { font-size: 16px; margin: 10px 0; }
 
 .overlay {
   position: fixed;
@@ -45,99 +44,93 @@ h3 {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.85);
+  background: rgba(0,0,0,0.9);
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  box-sizing: border-box;
 }
 
 .update-card {
-  background: white;
+  background: #1a1a1a;
   padding: 25px;
-  border-radius: 12px;
+  border-radius: 8px;
   text-align: center;
   width: 100%;
+  border: 1px solid #ffffff;
 }
 
-.update-card h2 {
-  color: #d83b01;
-  margin-bottom: 10px;
-}
-
-.update-card .warning {
-  color: #ff0000;
-  font-weight: bold;
-  margin: 15px 0;
-}
+.update-card h2 { color: #ff0000; }
+.update-card .warning { color: #ff0000; font-weight: bold; margin: 15px 0; }
 
 .download-btn-small {
   display: inline-block;
-  background: #0078d4;
-  color: white;
+  background: #ffffff;
+  color: #000000;
   padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 4px;
   text-decoration: none;
   font-weight: bold;
 }
 
 .menu-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 15px;
 }
 
 .menu-item {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 20px 10px;
+  background: #000000;
+  border: 1px solid #ffffff;
+  border-radius: 4px;
+  padding: 15px;
   cursor: pointer;
   transition: all 0.2s;
+  color: #ffffff;
+  font-family: "DFKai-SB", "標楷體", serif;
 }
 
 .menu-item:hover {
-  border-color: #0078d4;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  background: #333333;
 }
 
 .menu-item .icon {
-  font-size: 28px;
-  margin-bottom: 8px;
+  font-size: 24px;
+  margin-right: 15px;
 }
 
 .menu-item .text {
   font-weight: bold;
-  color: #333;
-  font-size: 13px;
+  font-size: 16px;
 }
 
 .header-row {
   display: flex;
   align-items: center;
   margin-bottom: 15px;
+  border-bottom: 1px solid #ffffff;
+  padding-bottom: 10px;
 }
 
 .back-btn {
   background: none;
-  border: none;
-  color: #0078d4;
+  border: 1px solid #ffffff;
+  color: #ffffff;
   cursor: pointer;
-  padding: 5px;
+  padding: 5px 10px;
   font-size: 14px;
   margin-right: 10px;
+  border-radius: 4px;
+  font-family: "DFKai-SB", "標楷體", serif;
 }
 
 label {
-  font-size: 12px;
-  color: #666;
-  margin-bottom: 4px;
+  font-size: 14px;
+  color: #ffffff;
+  margin-bottom: 5px;
   display: block;
 }
 
@@ -146,39 +139,53 @@ input[type="text"], textarea {
   margin-bottom: 10px;
   padding: 8px;
   box-sizing: border-box;
-  border: 1px solid #ccc;
+  border: 1px solid #ffffff;
+  background: #000000;
+  color: #ffffff;
   border-radius: 4px;
+  font-family: "DFKai-SB", "標楷體", serif;
 }
 
 button {
-  background-color: #0078d4;
-  color: white;
+  background-color: #ffffff;
+  color: #000000;
   border: none;
   padding: 10px;
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
+  font-family: "DFKai-SB", "標楷體", serif;
 }
 
-/* 全功能計算機 */
+button:hover {
+  background-color: #cccccc;
+}
+
+.secondary-btn {
+  background-color: #ff0000;
+  color: #ffffff;
+  margin-top: 10px;
+}
+
+/* 計算機 */
 .calculator {
-  background: #1c1c1c;
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+  background: #000000;
+  padding: 10px;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
 }
 
 #calc-display {
   width: 100%;
-  height: 50px;
-  background: #1c1c1c;
-  color: white;
+  height: 60px;
+  background: #000000;
+  color: #ffffff;
   text-align: right;
   padding: 10px;
-  font-family: 'Segoe UI', sans-serif;
-  font-size: 24px;
+  font-size: 32px;
   border: none;
-  margin-bottom: 10px;
+  border-bottom: 1px solid #ffffff;
+  margin-bottom: 15px;
   outline: none;
 }
 
@@ -189,59 +196,46 @@ button {
 }
 
 .calc-btn {
-  background: #333;
-  color: white;
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid #ffffff;
   padding: 15px 5px;
-  font-size: 16px;
-  border-radius: 50%;
-  width: 60px;
+  font-size: 18px;
+  border-radius: 4px;
+  width: 100%;
   height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
   cursor: pointer;
-  transition: background 0.2s;
+  font-family: "DFKai-SB", "標楷體", serif;
 }
 
 .calc-btn:hover {
-  background: #444;
+  background: #333333;
 }
 
-.calc-btn.operator {
-  background: #ff9f0a;
-  color: white;
+.calc-btn.operator, .calc-btn.equals {
+  background: #ffffff;
+  color: #000000;
 }
 
-.calc-btn.operator:hover {
-  background: #ffb340;
-}
-
-.calc-btn.equals {
-  background: #ff9f0a;
-}
-
-.calc-btn.clear, .calc-btn.backspace, .calc-btn.plus-minus {
-  background: #a5a5a5;
-  color: black;
-}
-
-.calc-btn.clear:hover {
-  background: #d4d4d2;
+.calc-btn.operator:hover, .calc-btn.equals:hover {
+  background: #cccccc;
 }
 
 /* 清單樣式 */
 .scroll-list {
-  max-height: 200px;
+  max-height: 250px;
   overflow-y: auto;
 }
 
 .saved-item, .music-item {
-  background: white;
+  background: #000000;
   padding: 10px;
-  margin-bottom: 8px;
-  border-radius: 6px;
-  border-left: 4px solid #0078d4;
+  margin-bottom: 10px;
+  border: 1px solid #ffffff;
+  border-radius: 4px;
   position: relative;
 }
 
@@ -249,24 +243,28 @@ button {
   position: absolute;
   top: 5px;
   right: 5px;
-  color: #d83b01;
+  color: #ff0000;
   cursor: pointer;
-  font-size: 10px;
+  font-size: 12px;
+  text-decoration: underline;
 }
 
-.music-controls {
-  display: flex;
-  gap: 5px;
-  margin-top: 8px;
+.music-item a, .saved-item a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+  display: block;
+  margin-right: 30px;
 }
 
-.play-btn { background: #27ae60; padding: 5px 10px; font-size: 11px; }
-.go-btn { background: #e67e22; padding: 5px 10px; font-size: 11px; }
-.link-btn { background: #3498db; padding: 5px 10px; font-size: 11px; }
+.music-item a:hover, .saved-item a:hover {
+  text-decoration: underline;
+}
 
-#yt-player-wrapper {
-  width: 100%;
-  background: #000;
-  border-radius: 8px;
-  overflow: hidden;
+.url-text {
+  font-size: 11px;
+  color: #cccccc;
+  word-break: break-all;
+  margin-bottom: 10px;
 }

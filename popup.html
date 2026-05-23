@@ -2,14 +2,14 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>opini v2.2</title>
+  <title>opini v2.3</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="update-overlay" class="overlay" style="display:none;">
     <div class="update-card">
       <h2>⚠️ 有新版本可用</h2>
-      <p id="update-version-text">有新版本可用 v2.2</p>
+      <p id="update-version-text">有新版本可用 v2.3</p>
       <p class="warning">請立即刪除此擴充並重新下載！</p>
       <a href="https://lan2015se-collab.github.io/opini/" target="_blank" class="download-btn-small">下載最新版本</a>
     </div>
@@ -18,7 +18,7 @@
   <div id="main-menu" class="container">
     <div class="header-main">
       <h2>opini 工具箱</h2>
-      <span class="version-tag">v2.2</span>
+      <span class="version-tag">v2.3</span>
     </div>
     <div class="menu-grid">
       <button class="menu-item" id="go-saver">
@@ -58,15 +58,14 @@
   <div id="music-page" class="container" style="display:none;">
     <div class="header-row">
       <button class="back-btn">⬅️ 返回</button>
-      <h2>OpiniMusic</h2>
+      <h2>OpiniMusic 管理歌曲</h2>
     </div>
     <div class="input-group">
-      <label>音樂網址 (YouTube/Spotify/Apple Music)：</label>
+      <label>手動輸入網址 (或在 YouTube 頁面點擊按鈕)：</label>
       <input type="text" id="music-url-input" placeholder="貼上音樂網址...">
-      <button id="analyze-save-btn">解析並儲存</button>
+      <button id="analyze-save-btn">儲存歌曲</button>
     </div>
     <hr>
-    <h3>管理歌曲</h3>
     <div id="music-list" class="scroll-list"></div>
   </div>
 
@@ -99,16 +98,6 @@
         <button class="calc-btn">.</button>
         <button class="calc-btn equals">=</button>
       </div>
-    </div>
-  </div>
-
-  <div id="player-page" class="container" style="display:none;">
-    <div class="header-row">
-      <button id="player-back-btn">⬅️ 返回清單</button>
-      <h2 id="player-title">播放中</h2>
-    </div>
-    <div id="yt-player-wrapper">
-      <!-- 這裡將動態插入您指定的 iframe 格式 -->
     </div>
   </div>
 
