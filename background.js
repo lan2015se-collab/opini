@@ -1,21 +1,31 @@
 const API_URL = 'https://free.v36.cm/v1/chat/completions';
 const API_KEY = 'sk-xvowcY9bmQsc6i4oC7B20dB29a44441a8844B157516a15E2';
 const GITHUB_DATA_REPO = 'lan2015se-collab/opini-data';
-// 注意：在實際瀏覽器環境中，需要使用者授權 GitHub Token
-// 這裡假設使用者已透過某種方式提供或擴充功能已獲得存取權限
-let GITHUB_TOKEN = ''; 
 
+let GITHUB_TOKEN = '';
 let currentUser = null;
 let isSyncing = false;
 
+// 初始化時從儲存空間讀取 Token
+chrome.storage.local.get(['githubToken', 'currentUser'], (data) => {
+  if (data.githubToken) GITHUB_TOKEN = data.githubToken;
+  if (data.currentUser) currentUser = data.currentUser;
+});
+
 // 每秒同步一次資料
 setInterval(async () => {
-  if (currentUser && !isSyncing) {
+  if (currentUser && GITHUB_TOKEN && !isSyncing) {
     await syncDataToGitHub();
   }
 }, 1000);
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'updateToken') {
+    GITHUB_TOKEN = request.token;
+    sendResponse({ success: true });
+    return;
+  }
+
   if (request.action === 'login' || request.action === 'register') {
     handleAuth(request).then(res => sendResponse(res));
     return true;
@@ -48,54 +58,49 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 async function handleAuth(data) {
   const { username, password } = data;
-  // 實際應用中，這裡會先檢查 GitHub 上是否存在該使用者的 json 檔案
   if (data.action === 'register') {
     currentUser = { username, password };
     await chrome.storage.local.set({ currentUser });
-    // 初始化雲端檔案
-    await syncDataToGitHub(true); 
+    if (GITHUB_TOKEN) await syncDataToGitHub(); 
     return { success: true };
   } else {
-    // 登入時嘗試從 GitHub 抓取資料
     currentUser = { username, password };
-    const success = await pullDataFromGitHub();
-    if (success) {
+    if (GITHUB_TOKEN) {
+      const success = await pullDataFromGitHub();
+      if (success) {
+        await chrome.storage.local.set({ currentUser });
+        return { success: true };
+      }
+    } else {
+      // 若無 Token 則先本地登入
       await chrome.storage.local.set({ currentUser });
       return { success: true };
     }
-    return { success: false, error: '帳號不存在或同步失敗' };
+    return { success: false, error: '登入失敗，請檢查 Token 或帳密' };
   }
 }
 
 async function fetchSummary(prompt) {
-  try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
-        messages: [
-          { role: 'system', content: '你是一個專業的影片分析助手。請根據提供的資訊回答：發布者、影片時長、以及內容核心摘要。' },
-          { role: 'user', content: prompt }
-        ]
-      })
-    });
-    const data = await response.json();
-    if (data && data.choices && data.choices[0] && data.choices[0].message) {
-      return data.choices[0].message.content;
-    } else {
-      throw new Error('AI 解析失敗，請檢查網路或 API 狀態');
-    }
-  } catch (e) {
-    throw e;
-  }
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${API_KEY}`
+    },
+    body: JSON.stringify({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        { role: 'system', content: '你是一個專業的影片分析助手。請根據提供的資訊回答：發布者、影片時長、以及內容核心摘要。' },
+        { role: 'user', content: prompt }
+      ]
+    })
+  });
+  const data = await response.json();
+  return data.choices[0].message.content;
 }
 
-async function syncDataToGitHub(isNew = false) {
-  if (!currentUser) return;
+async function syncDataToGitHub() {
+  if (!currentUser || !GITHUB_TOKEN) return;
   isSyncing = true;
   try {
     const storage = await chrome.storage.local.get(['opini_links', 'opini_music']);
@@ -108,15 +113,12 @@ async function syncDataToGitHub(isNew = false) {
     const path = `data/${currentUser.username}.json`;
     const url = `https://api.github.com/repos/${GITHUB_DATA_REPO}/contents/${path}`;
     
-    // 先獲取檔案 sha (如果存在)
     let sha = null;
-    try {
-      const res = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
-      if (res.ok) {
-        const fileData = await res.json();
-        sha = fileData.sha;
-      }
-    } catch (e) {}
+    const res = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
+    if (res.ok) {
+      const fileData = await res.json();
+      sha = fileData.sha;
+    }
 
     await fetch(url, {
       method: 'PUT',
@@ -125,7 +127,7 @@ async function syncDataToGitHub(isNew = false) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        message: `Sync data for ${currentUser.username}`,
+        message: `Sync for ${currentUser.username}`,
         content: content,
         sha: sha
       })
@@ -138,7 +140,7 @@ async function syncDataToGitHub(isNew = false) {
 }
 
 async function pullDataFromGitHub() {
-  if (!currentUser) return false;
+  if (!currentUser || !GITHUB_TOKEN) return false;
   try {
     const path = `data/${currentUser.username}.json`;
     const url = `https://api.github.com/repos/${GITHUB_DATA_REPO}/contents/${path}`;
@@ -154,8 +156,6 @@ async function pullDataFromGitHub() {
         return true;
       }
     }
-  } catch (e) {
-    console.error('抓取失敗', e);
-  }
+  } catch (e) {}
   return false;
 }

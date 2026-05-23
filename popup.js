@@ -4,20 +4,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   const saverPage = document.getElementById('saver-page');
   const musicPage = document.getElementById('music-page');
   const calcPage = document.getElementById('calc-page');
+  const settingsPage = document.getElementById('settings-page');
 
   // 檢查登入狀態
   const { currentUser } = await chrome.storage.local.get(['currentUser']);
-  if (currentUser) {
-    showPage(mainMenu);
-  }
+  if (currentUser) showPage(mainMenu);
 
   function showPage(page) {
-    [authPage, mainMenu, saverPage, musicPage, calcPage].forEach(p => p.style.display = 'none');
+    [authPage, mainMenu, saverPage, musicPage, calcPage, settingsPage].forEach(p => p.style.display = 'none');
     page.style.display = 'flex';
   }
 
   // 登入與註冊
-  document.getElementById('login-btn').onclick = async () => {
+  document.getElementById('login-btn').onclick = () => {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     chrome.runtime.sendMessage({ action: 'login', username, password }, (res) => {
@@ -26,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   };
 
-  document.getElementById('register-btn').onclick = async () => {
+  document.getElementById('register-btn').onclick = () => {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     chrome.runtime.sendMessage({ action: 'register', username, password }, (res) => {
@@ -45,17 +44,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     err.style.display = 'block';
   }
 
+  // 設定頁面邏輯
+  const tokenInput = document.getElementById('github-token-input');
+  const { githubToken } = await chrome.storage.local.get(['githubToken']);
+  if (githubToken) tokenInput.value = githubToken;
+
+  document.getElementById('save-settings-btn').onclick = async () => {
+    const token = tokenInput.value.trim();
+    await chrome.storage.local.set({ githubToken: token });
+    chrome.runtime.sendMessage({ action: 'updateToken', token: token });
+    alert('GitHub Token 已儲存並套用！');
+    showPage(mainMenu);
+  };
+
   // 頁面切換按鈕
   document.getElementById('go-saver').onclick = () => showPage(saverPage);
   document.getElementById('go-music').onclick = () => { showPage(musicPage); updateMusicList(); };
   document.getElementById('go-calc').onclick = () => showPage(calcPage);
+  document.getElementById('go-settings').onclick = () => showPage(settingsPage);
   document.querySelectorAll('.back-btn').forEach(btn => btn.onclick = () => showPage(mainMenu));
 
-  // 網址儲存邏輯 (簡化版)
+  // 網址儲存邏輯
   const savedList = document.getElementById('saved-list');
   const updateSaverList = async () => {
-    const { opini_links } = await chrome.storage.local.get(['opini_links']);
-    savedList.innerHTML = (opini_links || []).map(link => `
+    const { opini_links = [] } = await chrome.storage.local.get(['opini_links']);
+    savedList.innerHTML = opini_links.map(link => `
       <div class="saved-item"><a href="${link.url}" target="_blank">${link.displayName}</a></div>
     `).join('');
   };
@@ -72,17 +85,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 音樂清單邏輯
   const musicList = document.getElementById('music-list');
   const updateMusicList = async () => {
-    const { opini_music } = await chrome.storage.local.get(['opini_music']);
-    musicList.innerHTML = (opini_music || []).map(song => `
+    const { opini_music = [] } = await chrome.storage.local.get(['opini_music']);
+    musicList.innerHTML = opini_music.map(song => `
       <div class="music-item"><a href="${song.url}" target="_blank">${song.title}</a></div>
     `).join('');
   };
 
-  // 計算機邏輯 (延用之前穩定的邏輯)
+  // 計算機邏輯
   const calcDisplay = document.getElementById('calc-display');
   document.querySelectorAll('.calc-btn').forEach(btn => {
     btn.onclick = () => {
-      // 這裡放入之前 v2.2 穩定的計算邏輯
       const val = btn.textContent;
       if (val === 'C') calcDisplay.value = '0';
       else if (val === '=') {

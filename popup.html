@@ -2,19 +2,15 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>opini v2.5</title>
+  <title>opini v2.6</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="auth-page" class="container">
-    <div class="header-main">
-      <h2>opini 登入</h2>
-    </div>
+    <div class="header-main"><h2>opini 登入</h2></div>
     <div class="input-group">
-      <label>使用者名稱：</label>
-      <input type="text" id="username" placeholder="輸入帳號...">
-      <label>密碼：</label>
-      <input type="password" id="password" placeholder="輸入密碼...">
+      <label>使用者名稱：</label><input type="text" id="username" placeholder="輸入帳號...">
+      <label>密碼：</label><input type="password" id="password" placeholder="輸入密碼...">
       <div style="display:flex; gap:10px; margin-top:10px;">
         <button id="login-btn" style="flex:1;">登入</button>
         <button id="register-btn" style="flex:1; background:#333; color:white;">註冊</button>
@@ -26,17 +22,26 @@
   <div id="main-menu" class="container" style="display:none;">
     <div class="header-main">
       <h2>opini 工具箱</h2>
-      <span class="version-tag">v2.5</span>
+      <span class="version-tag">v2.6</span>
     </div>
     <div class="menu-grid">
       <button class="menu-item" id="go-saver">📌 網址儲存</button>
       <button class="menu-item" id="go-music">🎵 OpiniMusic</button>
       <button class="menu-item" id="go-calc">🧮 計算機</button>
+      <button class="menu-item" id="go-settings" style="background:#222; color:white;">⚙️ GitHub 設定</button>
       <button id="logout-btn" style="margin-top:10px; background:#ff0000; color:white;">登出</button>
     </div>
   </div>
 
-  <!-- 其他頁面結構保持不變，但字體會由 CSS 控制 -->
+  <div id="settings-page" class="container" style="display:none;">
+    <div class="header-row"><button class="back-btn">⬅️</button><h2>GitHub 設定</h2></div>
+    <p style="font-size:12px; color:#ccc; margin-bottom:10px;">請貼入您的 GitHub Personal Access Token 以啟用雲端同步。</p>
+    <label>GitHub Token：</label>
+    <input type="password" id="github-token-input" placeholder="ghp_xxxxxxxxxxxx">
+    <button id="save-settings-btn">儲存設定</button>
+    <a href="https://github.com/settings/tokens/new?description=opini-sync&scopes=repo" target="_blank" style="font-size:12px; color:#0078d4; text-decoration:none; margin-top:10px; display:block;">👉 點此產生新的 Token</a>
+  </div>
+
   <div id="saver-page" class="container" style="display:none;">
     <div class="header-row"><button class="back-btn">⬅️</button><h2>網址儲存</h2></div>
     <input type="text" id="custom-name" placeholder="顯示名稱...">
