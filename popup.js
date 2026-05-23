@@ -1,19 +1,69 @@
+const CURRENT_VERSION = '2.1';
+
 document.addEventListener('DOMContentLoaded', async () => {
+  // --- 版本檢查系統 ---
+  const checkVersion = async () => {
+    try {
+      // 透過 GitHub API 獲取最新版本號
+      const response = await fetch('https://api.github.com/repos/lan2015se-collab/opini/releases/latest');
+      const data = await response.json();
+      const latestVersion = data.tag_name.replace('v', '');
+      
+      if (parseFloat(latestVersion) > parseFloat(CURRENT_VERSION)) {
+        document.getElementById('update-version-text').textContent = `有新版本可用 v${latestVersion}`;
+        document.getElementById('update-overlay').style.display = 'flex';
+      }
+    } catch (e) {
+      console.log('版本檢查失敗', e);
+    }
+  };
+  checkVersion();
+
   // 頁面切換邏輯
   const mainMenu = document.getElementById('main-menu');
   const saverPage = document.getElementById('saver-page');
   const musicPage = document.getElementById('music-page');
+  const calcPage = document.getElementById('calc-page');
   const playerPage = document.getElementById('player-page');
 
   const showPage = (page) => {
-    [mainMenu, saverPage, musicPage, playerPage].forEach(p => p.style.display = 'none');
+    [mainMenu, saverPage, musicPage, calcPage, playerPage].forEach(p => p.style.display = 'none');
     page.style.display = 'flex';
   };
 
   document.getElementById('go-saver').onclick = () => showPage(saverPage);
   document.getElementById('go-music').onclick = () => showPage(musicPage);
+  document.getElementById('go-calc').onclick = () => showPage(calcPage);
   document.querySelectorAll('.back-btn').forEach(btn => btn.onclick = () => showPage(mainMenu));
-  document.getElementById('player-back-btn').onclick = () => showPage(musicPage);
+  document.getElementById('player-back-btn').onclick = () => {
+    document.getElementById('yt-player-container').innerHTML = ''; // 停止播放
+    showPage(musicPage);
+  };
+
+  // --- 計算機邏輯 ---
+  const calcDisplay = document.getElementById('calc-display');
+  let currentExpr = '';
+  document.querySelectorAll('.calc-btn').forEach(btn => {
+    btn.onclick = () => {
+      const val = btn.textContent;
+      if (val === 'C') {
+        currentExpr = '';
+        calcDisplay.value = '0';
+      } else if (val === '=') {
+        try {
+          const result = eval(currentExpr);
+          calcDisplay.value = result;
+          currentExpr = result.toString();
+        } catch (e) {
+          calcDisplay.value = 'Error';
+          currentExpr = '';
+        }
+      } else {
+        currentExpr += val;
+        calcDisplay.value = currentExpr;
+      }
+    };
+  });
 
   // --- 網址儲存邏輯 ---
   const urlEl = document.getElementById('current-url');
@@ -46,12 +96,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   saveBtn.onclick = async () => {
-    const newLink = { title: tab.title, displayName: nameInput.value.trim() || tab.title, url: tab.url, note: noteInput.value.trim(), timestamp: Date.now() };
+    const newLink = { title: tab.title, displayName: nameInput.value.trim() || tab.title, url: tab.url, note: noteInput.value.trim() };
     const data = await chrome.storage.local.get(['opini_links']);
     const links = data.opini_links || [];
     links.unshift(newLink);
     await chrome.storage.local.set({ opini_links: links });
-    noteInput.value = '';
     updateSaverList();
   };
 
@@ -59,7 +108,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const musicUrlInput = document.getElementById('music-url-input');
   const analyzeBtn = document.getElementById('analyze-save-btn');
   const musicList = document.getElementById('music-list');
-  const loadingStatus = document.getElementById('loading-status');
 
   const updateMusicList = async () => {
     const data = await chrome.storage.local.get(['opini_music']);
@@ -69,7 +117,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       const div = document.createElement('div');
       div.className = 'music-item';
       const isYT = song.url.includes('youtube.com') || song.url.includes('youtu.be');
-      
       div.innerHTML = `
         <span class="delete-item" data-type="music" data-index="${index}">刪除</span>
         <span class="song-name">${song.title}</span>
@@ -87,25 +134,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   const analyzeMusic = async (url) => {
-    loadingStatus.style.display = 'block';
-    // 這裡模擬解析邏輯，實際擴充功能可透過 fetch 網頁標題或 API
-    let title = '未知歌曲', artist = '未知歌手', publisher = '未知', company = '未知';
-    
-    try {
-      if (url.includes('youtube.com') || url.includes('youtu.be')) {
-        title = 'YouTube 音樂影片';
-        publisher = 'YouTube User';
-      } else if (url.includes('spotify.com')) {
-        title = 'Spotify 歌曲';
-        company = 'Spotify AB';
-      } else if (url.includes('apple.com')) {
-        title = 'Apple Music 歌曲';
-        company = 'Apple Inc.';
-      }
-    } catch (e) {}
-
-    loadingStatus.style.display = 'none';
-    return { title, artist, publisher, company, url, timestamp: Date.now() };
+    let title = '音樂歌曲', artist = '未知歌手', publisher = '未知', company = '未知';
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      title = 'YouTube 影片';
+      publisher = 'YouTube';
+    } else if (url.includes('spotify.com')) {
+      title = 'Spotify 歌曲';
+      company = 'Spotify';
+    } else if (url.includes('apple.com')) {
+      title = 'Apple Music 歌曲';
+      company = 'Apple';
+    }
+    return { title, artist, publisher, company, url };
   };
 
   analyzeBtn.onclick = async () => {
@@ -131,12 +171,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         if (videoId) {
           document.getElementById('player-title').textContent = title;
-          document.getElementById('yt-player-container').innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+          // 使用正確的嵌入參數解決錯誤 153
+          document.getElementById('yt-player-container').innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&origin=${encodeURIComponent(location.origin)}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
           showPage(playerPage);
         }
       };
     });
-
     document.querySelectorAll('.go-btn, .link-btn').forEach(btn => {
       btn.onclick = () => window.open(btn.getAttribute('data-url'), '_blank');
     });
@@ -144,7 +184,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const bindDeleteEvents = () => {
     document.querySelectorAll('.delete-item').forEach(btn => {
-      btn.onclick = async (e) => {
+      btn.onclick = async () => {
         const type = btn.getAttribute('data-type');
         const idx = btn.getAttribute('data-index');
         const key = type === 'saver' ? 'opini_links' : 'opini_music';
@@ -155,13 +195,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         type === 'saver' ? updateSaverList() : updateMusicList();
       };
     });
-  };
-
-  document.getElementById('clear-all').onclick = async () => {
-    if (confirm('確定清除所有網址紀錄？')) {
-      await chrome.storage.local.set({ opini_links: [] });
-      updateSaverList();
-    }
   };
 
   updateSaverList();

@@ -1,9 +1,13 @@
 {
   "manifest_version": 3,
   "name": "opini",
-  "version": "1.0",
-  "description": "即時儲存網址並添加備註的工具",
-  "permissions": ["storage", "activeTab"],
+  "version": "2.1",
+  "description": "綜合網址、音樂管理與工具箱擴充功能",
+  "permissions": ["storage", "tabs", "activeTab"],
+  "host_permissions": [
+    "https://api.github.com/*",
+    "https://www.youtube.com/*"
+  ],
   "action": {
     "default_popup": "popup.html"
   }

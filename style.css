@@ -12,8 +12,23 @@ body {
   flex-direction: column;
 }
 
+.header-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.version-tag {
+  font-size: 10px;
+  background: #ddd;
+  padding: 2px 6px;
+  border-radius: 10px;
+  color: #666;
+}
+
 h2 {
-  margin: 0 0 15px 0;
+  margin: 0;
   color: #333;
   font-size: 18px;
 }
@@ -22,6 +37,51 @@ h3 {
   font-size: 14px;
   margin: 10px 0;
   color: #555;
+}
+
+/* 強制更新遮罩 */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.update-card {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  width: 100%;
+}
+
+.update-card h2 {
+  color: #d83b01;
+  margin-bottom: 10px;
+}
+
+.update-card .warning {
+  color: #ff0000;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.download-btn-small {
+  display: inline-block;
+  background: #0078d4;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
 }
 
 /* 主選單網格 */
@@ -47,17 +107,17 @@ h3 {
 .menu-item:hover {
   border-color: #0078d4;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  transform: translateY(-2px);
 }
 
 .menu-item .icon {
-  font-size: 32px;
+  font-size: 28px;
   margin-bottom: 8px;
 }
 
 .menu-item .text {
   font-weight: bold;
   color: #333;
+  font-size: 13px;
 }
 
 /* 頁面標題列 */
@@ -94,11 +154,6 @@ input[type="text"], textarea {
   border-radius: 4px;
 }
 
-textarea {
-  height: 60px;
-  resize: none;
-}
-
 button {
   background-color: #0078d4;
   color: white;
@@ -109,23 +164,61 @@ button {
   font-weight: bold;
 }
 
-button:hover {
-  background-color: #005a9e;
+/* 計算機樣式 */
+.calculator {
+  background: #333;
+  padding: 15px;
+  border-radius: 8px;
 }
 
-.secondary-btn {
-  background-color: #f3f2f1;
-  color: #333;
-  margin-top: 10px;
-  font-size: 12px;
-  padding: 5px;
+#calc-display {
+  width: 100%;
+  height: 40px;
+  background: #222;
+  color: #00ff00;
+  text-align: right;
+  padding: 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 18px;
+  border: none;
+  margin-bottom: 10px;
+}
+
+.calc-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.calc-btn {
+  background: #555;
+  color: white;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.calc-btn:hover {
+  background: #777;
+}
+
+.calc-btn.operator {
+  background: #f39c12;
+}
+
+.calc-btn.equals {
+  background: #27ae60;
+  grid-row: span 2;
+}
+
+.calc-btn.clear {
+  background: #c0392b;
 }
 
 /* 清單樣式 */
 .scroll-list {
-  max-height: 250px;
+  max-height: 200px;
   overflow-y: auto;
-  margin-bottom: 10px;
 }
 
 .saved-item, .music-item {
@@ -134,82 +227,27 @@ button:hover {
   margin-bottom: 8px;
   border-radius: 6px;
   border-left: 4px solid #0078d4;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   position: relative;
-}
-
-.saved-item a, .music-item .song-name {
-  text-decoration: none;
-  color: #0078d4;
-  font-weight: bold;
-  font-size: 13px;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.saved-note, .music-info {
-  font-size: 11px;
-  color: #666;
-  margin: 2px 0;
-}
-
-.music-meta {
-  font-size: 10px;
-  color: #999;
-  font-style: italic;
 }
 
 .delete-item {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 5px;
+  right: 5px;
   color: #d83b01;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 10px;
 }
 
-/* 音樂控制按鈕 */
-.music-controls {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.play-btn {
-  background-color: #1db954; /* Spotify green */
-  font-size: 11px;
-  padding: 4px 10px;
-}
-
-.go-btn {
-  background-color: #ff0000; /* YouTube red */
-  font-size: 11px;
-  padding: 4px 10px;
-}
-
-.link-btn {
-  background-color: #555;
-  font-size: 11px;
-  padding: 4px 10px;
-}
-
-/* 播放器容器 */
 #yt-player-container {
   width: 100%;
   aspect-ratio: 16/9;
   background: #000;
   border-radius: 8px;
-  overflow: hidden;
 }
 
 #yt-player-container iframe {
   width: 100%;
   height: 100%;
   border: none;
-}
-
-hr {
-  border: 0;
-  border-top: 1px solid #ddd;
-  margin: 15px 0;
 }

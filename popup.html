@@ -2,12 +2,25 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>opini v2.0</title>
+  <title>opini v2.1</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- 強制更新遮罩 -->
+  <div id="update-overlay" class="overlay" style="display:none;">
+    <div class="update-card">
+      <h2>⚠️ 有新版本可用</h2>
+      <p id="update-version-text">有新版本可用 v2.1</p>
+      <p class="warning">請立即刪除此擴充並重新下載！</p>
+      <a href="https://lan2015se-collab.github.io/opini/" target="_blank" class="download-btn-small">下載最新版本</a>
+    </div>
+  </div>
+
   <div id="main-menu" class="container">
-    <h2>opini 工具箱</h2>
+    <div class="header-main">
+      <h2>opini 工具箱</h2>
+      <span class="version-tag">v2.1</span>
+    </div>
     <div class="menu-grid">
       <button class="menu-item" id="go-saver">
         <span class="icon">📌</span>
@@ -16,6 +29,10 @@
       <button class="menu-item" id="go-music">
         <span class="icon">🎵</span>
         <span class="text">OpiniMusic</span>
+      </button>
+      <button class="menu-item" id="go-calc">
+        <span class="icon">🧮</span>
+        <span class="text">計算機</span>
       </button>
     </div>
   </div>
@@ -55,6 +72,36 @@
     <hr>
     <h3>管理歌曲</h3>
     <div id="music-list" class="scroll-list"></div>
+  </div>
+
+  <!-- 計算機工具頁面 -->
+  <div id="calc-page" class="container" style="display:none;">
+    <div class="header-row">
+      <button class="back-btn">⬅️ 返回</button>
+      <h2>計算機</h2>
+    </div>
+    <div class="calculator">
+      <input type="text" id="calc-display" readonly value="0">
+      <div class="calc-buttons">
+        <button class="calc-btn clear">C</button>
+        <button class="calc-btn operator">/</button>
+        <button class="calc-btn operator">*</button>
+        <button class="calc-btn operator">-</button>
+        <button class="calc-btn">7</button>
+        <button class="calc-btn">8</button>
+        <button class="calc-btn">9</button>
+        <button class="calc-btn operator">+</button>
+        <button class="calc-btn">4</button>
+        <button class="calc-btn">5</button>
+        <button class="calc-btn">6</button>
+        <button class="calc-btn equals">=</button>
+        <button class="calc-btn">1</button>
+        <button class="calc-btn">2</button>
+        <button class="calc-btn">3</button>
+        <button class="calc-btn">0</button>
+        <button class="calc-btn">.</button>
+      </div>
+    </div>
   </div>
 
   <!-- YouTube 播放器頁面 -->
