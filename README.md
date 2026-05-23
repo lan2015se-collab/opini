@@ -34,4 +34,4 @@
 
 ---
 
-*由 Manus AI 建立與維護。*
+*由 [Ferz](https://eblog-ferz.lovable.app) 建立與維護。*
