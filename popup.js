@@ -1,25 +1,21 @@
-const CURRENT_VERSION = '2.1';
+const CURRENT_VERSION = '2.2';
 
 document.addEventListener('DOMContentLoaded', async () => {
   // --- 版本檢查系統 ---
   const checkVersion = async () => {
     try {
-      // 透過 GitHub API 獲取最新版本號
       const response = await fetch('https://api.github.com/repos/lan2015se-collab/opini/releases/latest');
       const data = await response.json();
       const latestVersion = data.tag_name.replace('v', '');
-      
       if (parseFloat(latestVersion) > parseFloat(CURRENT_VERSION)) {
         document.getElementById('update-version-text').textContent = `有新版本可用 v${latestVersion}`;
         document.getElementById('update-overlay').style.display = 'flex';
       }
-    } catch (e) {
-      console.log('版本檢查失敗', e);
-    }
+    } catch (e) { console.log('版本檢查失敗', e); }
   };
   checkVersion();
 
-  // 頁面切換邏輯
+  // 頁面切換
   const mainMenu = document.getElementById('main-menu');
   const saverPage = document.getElementById('saver-page');
   const musicPage = document.getElementById('music-page');
@@ -36,32 +32,83 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('go-calc').onclick = () => showPage(calcPage);
   document.querySelectorAll('.back-btn').forEach(btn => btn.onclick = () => showPage(mainMenu));
   document.getElementById('player-back-btn').onclick = () => {
-    document.getElementById('yt-player-container').innerHTML = ''; // 停止播放
+    document.getElementById('yt-player-wrapper').innerHTML = ''; 
     showPage(musicPage);
   };
 
-  // --- 計算機邏輯 ---
+  // --- 全功能計算機邏輯 ---
   const calcDisplay = document.getElementById('calc-display');
-  let currentExpr = '';
+  let displayValue = '0';
+  let firstOperand = null;
+  let waitingForSecondOperand = false;
+  let operator = null;
+
+  const updateDisplay = () => { calcDisplay.value = displayValue; };
+
+  const inputDigit = (digit) => {
+    if (waitingForSecondOperand) {
+      displayValue = digit;
+      waitingForSecondOperand = false;
+    } else {
+      displayValue = displayValue === '0' ? digit : displayValue + digit;
+    }
+  };
+
+  const inputDecimal = (dot) => {
+    if (waitingForSecondOperand) {
+      displayValue = '0.';
+      waitingForSecondOperand = false;
+      return;
+    }
+    if (!displayValue.includes(dot)) displayValue += dot;
+  };
+
+  const handleOperator = (nextOperator) => {
+    const inputValue = parseFloat(displayValue);
+    if (operator && waitingForSecondOperand) {
+      operator = nextOperator;
+      return;
+    }
+    if (firstOperand === null && !isNaN(inputValue)) {
+      firstOperand = inputValue;
+    } else if (operator) {
+      const result = calculate(firstOperand, inputValue, operator);
+      displayValue = `${parseFloat(result.toFixed(7))}`;
+      firstOperand = result;
+    }
+    waitingForSecondOperand = true;
+    operator = nextOperator;
+  };
+
+  const calculate = (first, second, op) => {
+    if (op === '+') return first + second;
+    if (op === '-') return first - second;
+    if (op === '*') return first * second;
+    if (op === '/') return first / second;
+    if (op === '%') return first % second;
+    return second;
+  };
+
+  const resetCalc = () => {
+    displayValue = '0';
+    firstOperand = null;
+    waitingForSecondOperand = false;
+    operator = null;
+  };
+
   document.querySelectorAll('.calc-btn').forEach(btn => {
     btn.onclick = () => {
-      const val = btn.textContent;
-      if (val === 'C') {
-        currentExpr = '';
-        calcDisplay.value = '0';
-      } else if (val === '=') {
-        try {
-          const result = eval(currentExpr);
-          calcDisplay.value = result;
-          currentExpr = result.toString();
-        } catch (e) {
-          calcDisplay.value = 'Error';
-          currentExpr = '';
-        }
-      } else {
-        currentExpr += val;
-        calcDisplay.value = currentExpr;
-      }
+      const { textContent: val, classList } = btn;
+      if (classList.contains('operator')) handleOperator(val);
+      else if (classList.contains('clear')) resetCalc();
+      else if (classList.contains('equals')) { handleOperator(operator); operator = null; }
+      else if (classList.contains('backspace')) {
+        displayValue = displayValue.length > 1 ? displayValue.slice(0, -1) : '0';
+      } else if (classList.contains('plus-minus')) {
+        displayValue = (parseFloat(displayValue) * -1).toString();
+      } else if (val === '.') inputDecimal(val);
+      else inputDigit(val);
+      updateDisplay();
     };
   });
 
@@ -73,10 +120,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const savedList = document.getElementById('saved-list');
 
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  if (tab) {
-    urlEl.textContent = tab.url;
-    nameInput.value = tab.title;
-  }
+  if (tab) { urlEl.textContent = tab.url; nameInput.value = tab.title; }
 
   const updateSaverList = async () => {
     const data = await chrome.storage.local.get(['opini_links']);
@@ -88,7 +132,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       div.innerHTML = `
         <span class="delete-item" data-type="saver" data-index="${index}">刪除</span>
         <a href="${item.url}" target="_blank">${item.displayName || item.title}</a>
-        ${item.note ? `<p class="saved-note">${item.note}</p>` : ''}
+        ${item.note ? `<p style="font-size:11px; color:#666; margin:5px 0;">${item.note}</p>` : ''}
       `;
       savedList.appendChild(div);
     });
@@ -119,45 +163,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       const isYT = song.url.includes('youtube.com') || song.url.includes('youtu.be');
       div.innerHTML = `
         <span class="delete-item" data-type="music" data-index="${index}">刪除</span>
-        <span class="song-name">${song.title}</span>
-        <p class="music-info">歌手: ${song.artist || '未知'}</p>
-        <p class="music-meta">發佈者: ${song.publisher || '未知'} | 公司: ${song.company || '未知'}</p>
+        <span style="font-weight:bold; font-size:13px;">${song.title}</span>
+        <p style="font-size:11px; color:#666; margin:3px 0;">歌手: ${song.artist || '未知'}</p>
         <div class="music-controls">
           ${isYT ? `<button class="play-btn" data-url="${song.url}" data-title="${song.title}">PLAY</button>` : ''}
-          ${isYT ? `<button class="go-btn" data-url="${song.url}">GO</button>` : `<button class="link-btn" data-url="${song.url}">前往網站</button>`}
+          <button class="go-btn" data-url="${song.url}">${isYT ? 'GO' : '前往網站'}</button>
         </div>
       `;
       musicList.appendChild(div);
     });
     bindMusicEvents();
     bindDeleteEvents();
-  };
-
-  const analyzeMusic = async (url) => {
-    let title = '音樂歌曲', artist = '未知歌手', publisher = '未知', company = '未知';
-    if (url.includes('youtube.com') || url.includes('youtu.be')) {
-      title = 'YouTube 影片';
-      publisher = 'YouTube';
-    } else if (url.includes('spotify.com')) {
-      title = 'Spotify 歌曲';
-      company = 'Spotify';
-    } else if (url.includes('apple.com')) {
-      title = 'Apple Music 歌曲';
-      company = 'Apple';
-    }
-    return { title, artist, publisher, company, url };
-  };
-
-  analyzeBtn.onclick = async () => {
-    const url = musicUrlInput.value.trim();
-    if (!url) return;
-    const songData = await analyzeMusic(url);
-    const data = await chrome.storage.local.get(['opini_music']);
-    const songs = data.opini_music || [];
-    songs.unshift(songData);
-    await chrome.storage.local.set({ opini_music: songs });
-    musicUrlInput.value = '';
-    updateMusicList();
   };
 
   const bindMusicEvents = () => {
@@ -171,13 +187,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         if (videoId) {
           document.getElementById('player-title').textContent = title;
-          // 使用正確的嵌入參數解決錯誤 153
-          document.getElementById('yt-player-container').innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&origin=${encodeURIComponent(location.origin)}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+          // 套用標準 YouTube 嵌入格式
+          const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+          document.getElementById('yt-player-wrapper').innerHTML = `
+            <iframe width="320" height="180" src="${embedUrl}" title="YouTube video player" 
+            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          `;
           showPage(playerPage);
         }
       };
     });
-    document.querySelectorAll('.go-btn, .link-btn').forEach(btn => {
+    document.querySelectorAll('.go-btn').forEach(btn => {
       btn.onclick = () => window.open(btn.getAttribute('data-url'), '_blank');
     });
   };
@@ -195,6 +216,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         type === 'saver' ? updateSaverList() : updateMusicList();
       };
     });
+  };
+
+  analyzeBtn.onclick = async () => {
+    const url = musicUrlInput.value.trim();
+    if (!url) return;
+    const songData = { title: '音樂歌曲', artist: '未知歌手', url: url };
+    const data = await chrome.storage.local.get(['opini_music']);
+    const songs = data.opini_music || [];
+    songs.unshift(songData);
+    await chrome.storage.local.set({ opini_music: songs });
+    musicUrlInput.value = '';
+    updateMusicList();
   };
 
   updateSaverList();

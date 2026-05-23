@@ -2,15 +2,14 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>opini v2.1</title>
+  <title>opini v2.2</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- 強制更新遮罩 -->
   <div id="update-overlay" class="overlay" style="display:none;">
     <div class="update-card">
       <h2>⚠️ 有新版本可用</h2>
-      <p id="update-version-text">有新版本可用 v2.1</p>
+      <p id="update-version-text">有新版本可用 v2.2</p>
       <p class="warning">請立即刪除此擴充並重新下載！</p>
       <a href="https://lan2015se-collab.github.io/opini/" target="_blank" class="download-btn-small">下載最新版本</a>
     </div>
@@ -19,7 +18,7 @@
   <div id="main-menu" class="container">
     <div class="header-main">
       <h2>opini 工具箱</h2>
-      <span class="version-tag">v2.1</span>
+      <span class="version-tag">v2.2</span>
     </div>
     <div class="menu-grid">
       <button class="menu-item" id="go-saver">
@@ -37,7 +36,6 @@
     </div>
   </div>
 
-  <!-- 網址儲存工具頁面 -->
   <div id="saver-page" class="container" style="display:none;">
     <div class="header-row">
       <button class="back-btn">⬅️ 返回</button>
@@ -57,7 +55,6 @@
     <button id="clear-all" class="secondary-btn">清除所有紀錄</button>
   </div>
 
-  <!-- OpiniMusic 工具頁面 -->
   <div id="music-page" class="container" style="display:none;">
     <div class="header-row">
       <button class="back-btn">⬅️ 返回</button>
@@ -68,13 +65,11 @@
       <input type="text" id="music-url-input" placeholder="貼上音樂網址...">
       <button id="analyze-save-btn">解析並儲存</button>
     </div>
-    <div id="loading-status" style="display:none; font-size:12px; color:#0078d4; margin-bottom:10px;">正在解析音樂資訊...</div>
     <hr>
     <h3>管理歌曲</h3>
     <div id="music-list" class="scroll-list"></div>
   </div>
 
-  <!-- 計算機工具頁面 -->
   <div id="calc-page" class="container" style="display:none;">
     <div class="header-row">
       <button class="back-btn">⬅️ 返回</button>
@@ -84,34 +79,36 @@
       <input type="text" id="calc-display" readonly value="0">
       <div class="calc-buttons">
         <button class="calc-btn clear">C</button>
+        <button class="calc-btn backspace">⌫</button>
+        <button class="calc-btn operator">%</button>
         <button class="calc-btn operator">/</button>
-        <button class="calc-btn operator">*</button>
-        <button class="calc-btn operator">-</button>
         <button class="calc-btn">7</button>
         <button class="calc-btn">8</button>
         <button class="calc-btn">9</button>
-        <button class="calc-btn operator">+</button>
+        <button class="calc-btn operator">*</button>
         <button class="calc-btn">4</button>
         <button class="calc-btn">5</button>
         <button class="calc-btn">6</button>
-        <button class="calc-btn equals">=</button>
+        <button class="calc-btn operator">-</button>
         <button class="calc-btn">1</button>
         <button class="calc-btn">2</button>
         <button class="calc-btn">3</button>
+        <button class="calc-btn operator">+</button>
+        <button class="calc-btn plus-minus">±</button>
         <button class="calc-btn">0</button>
         <button class="calc-btn">.</button>
+        <button class="calc-btn equals">=</button>
       </div>
     </div>
   </div>
 
-  <!-- YouTube 播放器頁面 -->
   <div id="player-page" class="container" style="display:none;">
     <div class="header-row">
       <button id="player-back-btn">⬅️ 返回清單</button>
       <h2 id="player-title">播放中</h2>
     </div>
-    <div id="yt-player-container">
-      <!-- 嵌入播放器 -->
+    <div id="yt-player-wrapper">
+      <!-- 這裡將動態插入您指定的 iframe 格式 -->
     </div>
   </div>
 
