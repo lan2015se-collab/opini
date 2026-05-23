@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>opini - 網址備註與管理擴充功能</title>
+    <title>opini v2.0 - 網址與音樂管理工具</title>
     <style>
         * {
             margin: 0;
@@ -36,6 +36,16 @@
         header p {
             font-size: 1.2rem;
             opacity: 0.9;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-left: 1rem;
         }
 
         .container {
@@ -85,7 +95,7 @@
 
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
             margin-bottom: 2rem;
         }
@@ -96,6 +106,11 @@
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
+            border-top: 4px solid #667eea;
+        }
+
+        .feature-card.new {
+            border-top-color: #ff6b6b;
         }
 
         .feature-card:hover {
@@ -108,9 +123,25 @@
             font-size: 1.3rem;
         }
 
+        .feature-card.new h3 {
+            color: #ff6b6b;
+        }
+
         .feature-card p {
             color: #666;
             line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .new-badge {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
         }
 
         .installation {
@@ -184,6 +215,28 @@
             color: white;
         }
 
+        .changelog {
+            background: #f0f7ff;
+            border-left: 4px solid #0078d4;
+            padding: 1.5rem;
+            border-radius: 5px;
+            margin-bottom: 2rem;
+        }
+
+        .changelog h3 {
+            color: #0078d4;
+            margin-bottom: 1rem;
+        }
+
+        .changelog ul {
+            margin-left: 1.5rem;
+        }
+
+        .changelog li {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
         footer {
             background: rgba(0, 0, 0, 0.7);
             color: white;
@@ -220,41 +273,51 @@
 </head>
 <body>
     <header>
-        <h1>📌 opini</h1>
-        <p>您的個人網址管理助手</p>
+        <h1>📌 opini <span class="version-badge">v2.0</span></h1>
+        <p>您的綜合網址與音樂管理工具</p>
     </header>
 
     <div class="container">
         <div class="hero">
-            <h2>智慧儲存。輕鬆管理。</h2>
-            <p>opini 讓您即時儲存任何網址，並為其添加自定義名稱與詳細備註。告別雜亂的書籤，讓您的網頁收藏變得井然有序。</p>
-            <a href="https://github.com/lan2015se-collab/opini/releases/download/v1.2/opini_v1.2.zip" class="download-btn">⬇️ 立即下載 opini v1.2</a>
+            <h2>全新工具箱體驗</h2>
+            <p>opini v2.0 帶來革命性的升級！不僅保留了強大的網址儲存功能，更新增了 <strong>OpiniMusic</strong> — 專為音樂愛好者設計的音樂解析與播放工具。</p>
+            <a href="https://github.com/lan2015se-collab/opini/releases/download/v2.0/opini_v2.0.zip" class="download-btn">⬇️ 立即下載 opini v2.0</a>
+        </div>
+
+        <div class="changelog">
+            <h3>🎉 v2.0 更新亮點</h3>
+            <ul>
+                <li><strong>工具箱主頁</strong>：開啟擴充功能後可自由選擇使用的工具。</li>
+                <li><strong>OpiniMusic (新功能！)</strong>：支援 YouTube、Spotify、Apple Music 音樂網址解析。</li>
+                <li><strong>內建播放器</strong>：YouTube 音樂可在彈出視窗內直接播放，無需切換分頁。</li>
+                <li><strong>快速導航</strong>：PLAY、GO、返回等按鈕提供流暢的使用體驗。</li>
+            </ul>
         </div>
 
         <div class="features">
             <div class="feature-card">
-                <h3>⚡ 即時儲存</h3>
-                <p>一鍵快速儲存當前瀏覽頁面的網址，無需複雜操作。</p>
+                <h3>📌 網址儲存</h3>
+                <p>一鍵快速儲存當前瀏覽頁面的網址，無需複雜操作。為每個網址設定易於識別的名稱與詳細備註。</p>
             </div>
-            <div class="feature-card">
-                <h3>✏️ 自定義名稱</h3>
-                <p>為每個儲存的網址設定易於識別的名稱，取代冗長的網頁標題。</p>
+            <div class="feature-card new">
+                <h3>🎵 OpiniMusic <span class="new-badge">NEW</span></h3>
+                <p>自動解析 YouTube、Spotify 及 Apple Music 的音樂資訊，包括歌名、歌手、發行商與娛樂公司。</p>
             </div>
-            <div class="feature-card">
-                <h3>📝 詳細備註</h3>
-                <p>添加個人備註，記錄您的想法、重點或回顧提示。</p>
+            <div class="feature-card new">
+                <h3>▶️ 內建播放器 <span class="new-badge">NEW</span></h3>
+                <p>YouTube 音樂支援 PLAY 按鈕，直接在擴充功能內嵌入播放，提供無縫的音樂體驗。</p>
             </div>
             <div class="feature-card">
                 <h3>🔗 快速跳轉</h3>
-                <p>在擴充功能清單中點擊名稱，即可直接開啟該網頁。</p>
+                <p>在擴充功能清單中點擊名稱或連結，即可直接開啟該網頁或音樂平台。</p>
             </div>
             <div class="feature-card">
                 <h3>🔒 本地儲存</h3>
                 <p>所有資料安全地儲存在您的瀏覽器本地，確保隱私與速度。</p>
             </div>
             <div class="feature-card">
-                <h3>🗑️ 一鍵刪除</h3>
-                <p>輕鬆移除不再需要的網址記錄。</p>
+                <h3>🗑️ 輕鬆管理</h3>
+                <p>一鍵刪除不再需要的網址或歌曲記錄，保持清單整潔。</p>
             </div>
         </div>
 
@@ -264,8 +327,8 @@
             <div class="installation-step">
                 <h3>第一步：下載擴充功能</h3>
                 <ol>
-                    <li>點擊上方的「立即下載 opini v1.2」按鈕。</li>
-                    <li>將下載的 <code>opini_v1.2.zip</code> 檔案解壓縮到一個<strong>全新的資料夾</strong>（例如：桌面上的 <code>opini</code> 資料夾）。</li>
+                    <li>點擊上方的「立即下載 opini v2.0」按鈕。</li>
+                    <li>將下載的 <code>opini_v2.0.zip</code> 檔案解壓縮到一個<strong>全新的資料夾</strong>（例如：桌面上的 <code>opini</code> 資料夾）。</li>
                     <li>確保 <code>manifest.json</code> 檔案直接位於該資料夾的根目錄下。</li>
                 </ol>
             </div>
@@ -296,7 +359,18 @@
                 <ol>
                     <li>點擊瀏覽器右上角的「<strong>擴充功能</strong>」圖示（拼圖形狀）。</li>
                     <li>找到 <strong>opini</strong> 並將其釘選到工具列。</li>
-                    <li>現在，當您在任何網頁點擊 <strong>opini</strong> 圖示，就可以輸入自定義名稱與備註並儲存了！</li>
+                    <li>現在，當您點擊 <strong>opini</strong> 圖示，就可以選擇使用「網址儲存」或「OpiniMusic」工具了！</li>
+                </ol>
+            </div>
+
+            <div class="installation-step">
+                <h3>💡 OpiniMusic 使用提示</h3>
+                <ol>
+                    <li>開啟擴充功能後，點擊「🎵 OpiniMusic」進入音樂管理工具。</li>
+                    <li>貼上 YouTube、Spotify 或 Apple Music 的音樂網址，點擊「解析並儲存」。</li>
+                    <li>擴充功能會自動解析音樂資訊並顯示在清單中。</li>
+                    <li>對於 YouTube 音樂，點擊 <strong>PLAY</strong> 可在彈出視窗內播放，點擊 <strong>GO</strong> 直接前往 YouTube。</li>
+                    <li>對於 Spotify 或 Apple Music，點擊連結按鈕可直接前往該平台。</li>
                 </ol>
             </div>
         </div>
