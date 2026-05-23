@@ -5,32 +5,285 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>opini v2.1 - 綜合工具箱</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; color: #333; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
-        header { background: rgba(0, 0, 0, 0.7); color: white; padding: 2rem 0; text-align: center; border-bottom: 3px solid #667eea; }
-        .version-badge { display: inline-block; background: #ff6b6b; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.9rem; margin-left: 1rem; }
-        .container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
-        .hero { background: white; border-radius: 10px; padding: 3rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); text-align: center; }
-        .download-btn { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem 2.5rem; border-radius: 50px; text-decoration: none; font-size: 1.1rem; font-weight: bold; box-shadow: 0 5px 15px rgba(102,126,234,0.4); }
-        .changelog { background: #fff5f5; border-left: 4px solid #ff6b6b; padding: 1.5rem; border-radius: 5px; margin-bottom: 2rem; }
-        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
-        .feature-card { background: white; padding: 2rem; border-radius: 10px; border-top: 4px solid #667eea; }
-        .feature-card.new { border-top-color: #ff6b6b; }
-        .installation { background: white; border-radius: 10px; padding: 3rem; margin-top: 2rem; }
-        footer { background: rgba(0, 0, 0, 0.7); color: white; text-align: center; padding: 2rem; margin-top: 3rem; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            border-bottom: 3px solid #667eea;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-left: 1rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero {
+            background: white;
+            border-radius: 10px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .hero h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .changelog {
+            background: #fff5f5;
+            border-left: 4px solid #ff6b6b;
+            padding: 1.5rem;
+            border-radius: 5px;
+            margin-bottom: 2rem;
+        }
+
+        .changelog h3 {
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+        }
+
+        .changelog ul {
+            margin-left: 1.5rem;
+        }
+
+        .changelog li {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            border-top: 4px solid #667eea;
+        }
+
+        .feature-card.new {
+            border-top-color: #ff6b6b;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .feature-card.new h3 {
+            color: #ff6b6b;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .new-badge {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .installation {
+            background: white;
+            border-radius: 10px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .installation h2 {
+            color: #667eea;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 1rem;
+        }
+
+        .installation-step {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .installation-step:last-child {
+            border-bottom: none;
+        }
+
+        .installation-step h3 {
+            color: #764ba2;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .installation-step ol, .installation-step ul {
+            margin-left: 2rem;
+            color: #666;
+        }
+
+        .installation-step li {
+            margin-bottom: 0.5rem;
+            line-height: 1.8;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            border-radius: 5px;
+        }
+
+        .browser-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .browser-tab {
+            background: #f0f0f0;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .browser-tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            border-top: 3px solid #667eea;
+        }
+
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .github-link {
+            display: inline-block;
+            background: #333;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 1rem;
+            transition: background 0.3s;
+        }
+
+        .github-link:hover {
+            background: #555;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>📌 opini <span class="version-badge">v2.1</span></h1>
-        <p>您的綜合網址、音樂與計算工具箱</p>
+        <p>您的綜合網址、音樂與工具箱</p>
     </header>
+
     <div class="container">
         <div class="hero">
             <h2>功能全面升級，穩定性更高</h2>
-            <p>opini v2.1 修復了播放器錯誤，並新增了版本檢測系統與計算機工具。</p>
+            <p>opini v2.1 修復了播放器錯誤，新增了版本檢測系統與實用計算機工具。</p>
             <a href="https://github.com/lan2015se-collab/opini/releases/download/v2.1/opini_v2.1.zip" class="download-btn">⬇️ 立即下載 opini v2.1 (ZIP)</a>
         </div>
+
         <div class="changelog">
             <h3>🚀 v2.1 更新亮點</h3>
             <ul>
@@ -39,30 +292,93 @@
                 <li><strong>🛠️ 播放器修復</strong>：解決 YouTube 嵌入播放器錯誤 (Error 153)。</li>
             </ul>
         </div>
+
         <div class="features">
             <div class="feature-card">
                 <h3>📌 網址儲存</h3>
-                <p>一鍵儲存網址、自定義名稱並添加備註，輕鬆管理您的網頁收藏。</p>
-            </div>
-            <div class="feature-card">
-                <h3>🎵 OpiniMusic</h3>
-                <p>解析 YouTube、Spotify、Apple Music 資訊，支援內建播放與快速跳轉。</p>
+                <p>一鍵快速儲存當前瀏覽頁面的網址，無需複雜操作。為每個網址設定易於識別的名稱與詳細備註。</p>
             </div>
             <div class="feature-card new">
-                <h3>🧮 實用計算機</h3>
-                <p>無需開啟新分頁，直接在擴充功能內完成簡單的數學運算。</p>
+                <h3>🎵 OpiniMusic <span class="new-badge">NEW</span></h3>
+                <p>自動解析 YouTube、Spotify 及 Apple Music 的音樂資訊，包括歌名、歌手、發行商與娛樂公司。</p>
+            </div>
+            <div class="feature-card new">
+                <h3>🧮 實用計算機 <span class="new-badge">NEW</span></h3>
+                <p>在工具箱中內建標準計算機，支援加減乘除與清除功能，無需開啟新分頁即可快速運算。</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔗 快速跳轉</h3>
+                <p>在擴充功能清單中點擊名稱或連結，即可直接開啟該網頁或音樂平台。</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔒 本地儲存</h3>
+                <p>所有資料安全地儲存在您的瀏覽器本地，確保隱私與速度。</p>
+            </div>
+            <div class="feature-card new">
+                <h3>🛡️ 版本檢測 <span class="new-badge">NEW</span></h3>
+                <p>擴充功能會自動檢查最新版本，若有更新將提示您下載，確保功能始終可用。</p>
             </div>
         </div>
+
         <div class="installation">
-            <h2>📖 安裝說明</h2>
-            <p>1. 下載 <code>opini_v2.1.zip</code> 並解壓縮。</p>
-            <p>2. 在瀏覽器擴充功能頁面開啟「開發人員模式」。</p>
-            <p>3. 點擊「載入解壓縮的擴充功能」，選擇解壓後的<strong>資料夾</strong>即可。</p>
+            <h2>📖 安裝指南</h2>
+
+            <div class="installation-step">
+                <h3>第一步：下載擴充功能</h3>
+                <ol>
+                    <li>點擊上方的「立即下載 opini v2.1 (ZIP)」按鈕。</li>
+                    <li>將下載的 <code>opini_v2.1.zip</code> 檔案解壓縮到一個<strong>全新的資料夾</strong>（例如：桌面上的 <code>opini</code> 資料夾）。</li>
+                    <li>確保 <code>manifest.json</code> 檔案直接位於該資料夾的根目錄下。</li>
+                </ol>
+            </div>
+
+            <div class="installation-step">
+                <h3>第二步：開啟瀏覽器擴充功能管理</h3>
+                <div class="browser-tabs">
+                    <div class="browser-tab active">Microsoft Edge</div>
+                    <div class="browser-tab">Google Chrome</div>
+                </div>
+                <ul>
+                    <li><strong>Microsoft Edge</strong>：在網址列輸入 <div class="code-block">edge://extensions/</div> 並按 Enter。</li>
+                    <li><strong>Google Chrome</strong>：在網址列輸入 <div class="code-block">chrome://extensions/</div> 並按 Enter。</li>
+                </ul>
+            </div>
+
+            <div class="installation-step">
+                <h3>第三步：載入擴充功能</h3>
+                <ol>
+                    <li>在頁面中開啟「<strong>開發人員模式</strong>」開關（通常位於右上角或左下角）。</li>
+                    <li>點擊「<strong>載入解壓縮的擴充功能</strong>」（Edge）或「<strong>載入未封裝項目</strong>」（Chrome）按鈕。</li>
+                    <li>在彈出的檔案選擇視窗中，選擇您在第一步中<strong>解壓縮後的那個資料夾</strong>（不是 ZIP 檔案本身）。</li>
+                </ol>
+            </div>
+
+            <div class="installation-step">
+                <h3>第四步：開始使用</h3>
+                <ol>
+                    <li>點擊瀏覽器右上角的「<strong>擴充功能</strong>」圖示（拼圖形狀）。</li>
+                    <li>找到 <strong>opini</strong> 並將其釘選到工具列。</li>
+                    <li>現在，當您點擊 <strong>opini</strong> 圖示，就可以選擇使用「網址儲存」、「OpiniMusic」或「計算機」工具了！</li>
+                </ol>
+            </div>
+
+            <div class="installation-step">
+                <h3>💡 功能使用提示</h3>
+                <ol>
+                    <li><strong>網址儲存</strong>：開啟擴充功能後，點擊「📌 網址儲存」進入工具。輸入自定義名稱與備註後點擊「儲存此網頁」。</li>
+                    <li><strong>OpiniMusic</strong>：點擊「🎵 OpiniMusic」，貼上 YouTube、Spotify 或 Apple Music 的音樂網址，點擊「解析並儲存」。</li>
+                    <li><strong>播放器</strong>：對於 YouTube 音樂，點擊 <strong>PLAY</strong> 可在彈出視窗內播放，點擊 <strong>GO</strong> 直接前往 YouTube。</li>
+                    <li><strong>計算機</strong>：點擊「🧮 計算機」即可進行快速運算。</li>
+                    <li><strong>版本檢測</strong>：若擴充功能偵測到新版本，會自動提示您下載更新。</li>
+                </ol>
+            </div>
         </div>
     </div>
+
     <footer>
         <p>由 <a href="https://eblog-ferz.lovable.app" style="color: #667eea; text-decoration: underline; font-weight: bold;">Ferz</a> 建立與維護</p>
-        <p>© 2026 opini. All rights reserved.</p>
+        <a href="https://github.com/lan2015se-collab/opini" class="github-link">📚 查看 GitHub 儲存庫</a>
+        <p style="margin-top: 1rem; opacity: 0.8;">© 2026 opini. All rights reserved.</p>
     </footer>
 </body>
 </html>
