@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>opini</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>opini - 網址儲存</h2>
+    <div class="current-info">
+      <p id="current-url" class="url-text"></p>
+    </div>
+    
+    <label for="custom-name">自定義名稱：</label>
+    <input type="text" id="custom-name" placeholder="輸入此網址的顯示名稱...">
+    
+    <label for="note-input">備註：</label>
+    <textarea id="note-input" placeholder="在這裡輸入備註..."></textarea>
+    
+    <button id="save-btn">儲存此網頁</button>
+    
+    <hr>
+    
+    <h3>已儲存的清單</h3>
+    <div id="saved-list"></div>
+    <button id="clear-all" class="secondary-btn">清除所有紀錄</button>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

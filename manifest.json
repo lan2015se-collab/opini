@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "opini",
+  "version": "1.0",
+  "description": "即時儲存網址並添加備註的工具",
+  "permissions": ["storage", "activeTab"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
