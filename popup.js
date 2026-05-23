@@ -1,4 +1,4 @@
-const VERSION = "2.7";
+const VERSION = "2.7.1";
 
 // 介面切換邏輯
 function showScreen(screenId) {
