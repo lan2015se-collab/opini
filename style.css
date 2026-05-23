@@ -1,270 +1,39 @@
 body {
   width: 350px;
-  font-family: "DFKai-SB", "標楷體", serif; /* 強制使用標楷體 */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   padding: 0;
   margin: 0;
-  background-color: #000000; /* 黑色背景 */
-  color: #ffffff; /* 白色文字 */
-}
-
-.container {
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-}
-
-.header-main {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  border-bottom: 1px solid #ffffff;
-  padding-bottom: 10px;
-}
-
-.version-tag {
-  font-size: 10px;
-  background: #333;
-  padding: 2px 6px;
-  border-radius: 4px;
-  color: #fff;
-}
-
-h2, h3 {
-  margin: 0;
+  background-color: #000000;
   color: #ffffff;
 }
 
-h2 { font-size: 20px; }
-h3 { font-size: 16px; margin: 10px 0; }
+.container { padding: 15px; display: flex; flex-direction: column; }
+.header-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #ffffff; padding-bottom: 10px; }
+.version-tag { font-size: 10px; background: #333; padding: 2px 6px; border-radius: 4px; }
 
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
+input, textarea, button {
+  font-family: inherit;
   width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.9);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.update-card {
-  background: #1a1a1a;
-  padding: 25px;
-  border-radius: 8px;
-  text-align: center;
-  width: 100%;
-  border: 1px solid #ffffff;
-}
-
-.update-card h2 { color: #ff0000; }
-.update-card .warning { color: #ff0000; font-weight: bold; margin: 15px 0; }
-
-.download-btn-small {
-  display: inline-block;
-  background: #ffffff;
-  color: #000000;
-  padding: 10px 20px;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.menu-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 15px;
-}
-
-.menu-item {
-  display: flex;
-  align-items: center;
-  background: #000000;
-  border: 1px solid #ffffff;
-  border-radius: 4px;
-  padding: 15px;
-  cursor: pointer;
-  transition: all 0.2s;
-  color: #ffffff;
-  font-family: "DFKai-SB", "標楷體", serif;
-}
-
-.menu-item:hover {
-  background: #333333;
-}
-
-.menu-item .icon {
-  font-size: 24px;
-  margin-right: 15px;
-}
-
-.menu-item .text {
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.header-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-  border-bottom: 1px solid #ffffff;
-  padding-bottom: 10px;
-}
-
-.back-btn {
-  background: none;
-  border: 1px solid #ffffff;
-  color: #ffffff;
-  cursor: pointer;
-  padding: 5px 10px;
-  font-size: 14px;
-  margin-right: 10px;
-  border-radius: 4px;
-  font-family: "DFKai-SB", "標楷體", serif;
-}
-
-label {
-  font-size: 14px;
-  color: #ffffff;
-  margin-bottom: 5px;
-  display: block;
-}
-
-input[type="text"], textarea {
-  width: 100%;
+  padding: 10px;
   margin-bottom: 10px;
-  padding: 8px;
+  border-radius: 4px;
   box-sizing: border-box;
-  border: 1px solid #ffffff;
-  background: #000000;
-  color: #ffffff;
-  border-radius: 4px;
-  font-family: "DFKai-SB", "標楷體", serif;
 }
 
-button {
-  background-color: #ffffff;
-  color: #000000;
-  border: none;
-  padding: 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  font-family: "DFKai-SB", "標楷體", serif;
-}
+input, textarea { background: #111; border: 1px solid #444; color: white; }
+button { background: white; color: black; border: none; font-weight: bold; cursor: pointer; }
+button:hover { background: #ccc; }
 
-button:hover {
-  background-color: #cccccc;
-}
+.menu-grid { display: grid; gap: 10px; }
+.menu-item { text-align: left; padding: 15px; border: 1px solid #ffffff; background: black; color: white; }
+.menu-item:hover { background: #222; }
 
-.secondary-btn {
-  background-color: #ff0000;
-  color: #ffffff;
-  margin-top: 10px;
-}
+.scroll-list { max-height: 250px; overflow-y: auto; }
+.saved-item, .music-item { border-bottom: 1px solid #333; padding: 10px 0; }
+.saved-item a, .music-item a { color: white; text-decoration: none; font-size: 14px; }
 
-/* 計算機 */
-.calculator {
-  background: #000000;
-  padding: 10px;
-  border: 1px solid #ffffff;
-  border-radius: 8px;
-}
-
-#calc-display {
-  width: 100%;
-  height: 60px;
-  background: #000000;
-  color: #ffffff;
-  text-align: right;
-  padding: 10px;
-  font-size: 32px;
-  border: none;
-  border-bottom: 1px solid #ffffff;
-  margin-bottom: 15px;
-  outline: none;
-}
-
-.calc-buttons {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-}
-
-.calc-btn {
-  background: #000000;
-  color: #ffffff;
-  border: 1px solid #ffffff;
-  padding: 15px 5px;
-  font-size: 18px;
-  border-radius: 4px;
-  width: 100%;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-family: "DFKai-SB", "標楷體", serif;
-}
-
-.calc-btn:hover {
-  background: #333333;
-}
-
-.calc-btn.operator, .calc-btn.equals {
-  background: #ffffff;
-  color: #000000;
-}
-
-.calc-btn.operator:hover, .calc-btn.equals:hover {
-  background: #cccccc;
-}
-
-/* 清單樣式 */
-.scroll-list {
-  max-height: 250px;
-  overflow-y: auto;
-}
-
-.saved-item, .music-item {
-  background: #000000;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ffffff;
-  border-radius: 4px;
-  position: relative;
-}
-
-.delete-item {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  color: #ff0000;
-  cursor: pointer;
-  font-size: 12px;
-  text-decoration: underline;
-}
-
-.music-item a, .saved-item a {
-  color: #ffffff;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 14px;
-  display: block;
-  margin-right: 30px;
-}
-
-.music-item a:hover, .saved-item a:hover {
-  text-decoration: underline;
-}
-
-.url-text {
-  font-size: 11px;
-  color: #cccccc;
-  word-break: break-all;
-  margin-bottom: 10px;
-}
+.calculator { border: 1px solid #ffffff; padding: 10px; border-radius: 8px; }
+#calc-display { font-size: 24px; text-align: right; border: none; border-bottom: 1px solid #333; margin-bottom: 10px; }
+.calc-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+.calc-btn { height: 50px; padding: 0; display: flex; align-items: center; justify-content: center; background: #222; color: white; border: 1px solid #444; }
+.calc-btn.operator { background: white; color: black; }

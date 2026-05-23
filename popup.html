@@ -2,78 +2,56 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>opini v2.3</title>
+  <title>opini v2.5</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="update-overlay" class="overlay" style="display:none;">
-    <div class="update-card">
-      <h2>⚠️ 有新版本可用</h2>
-      <p id="update-version-text">有新版本可用 v2.3</p>
-      <p class="warning">請立即刪除此擴充並重新下載！</p>
-      <a href="https://lan2015se-collab.github.io/opini/" target="_blank" class="download-btn-small">下載最新版本</a>
+  <div id="auth-page" class="container">
+    <div class="header-main">
+      <h2>opini 登入</h2>
+    </div>
+    <div class="input-group">
+      <label>使用者名稱：</label>
+      <input type="text" id="username" placeholder="輸入帳號...">
+      <label>密碼：</label>
+      <input type="password" id="password" placeholder="輸入密碼...">
+      <div style="display:flex; gap:10px; margin-top:10px;">
+        <button id="login-btn" style="flex:1;">登入</button>
+        <button id="register-btn" style="flex:1; background:#333; color:white;">註冊</button>
+      </div>
+      <p id="auth-error" style="color:red; font-size:12px; margin-top:10px; display:none;"></p>
     </div>
   </div>
 
-  <div id="main-menu" class="container">
+  <div id="main-menu" class="container" style="display:none;">
     <div class="header-main">
       <h2>opini 工具箱</h2>
-      <span class="version-tag">v2.3</span>
+      <span class="version-tag">v2.5</span>
     </div>
     <div class="menu-grid">
-      <button class="menu-item" id="go-saver">
-        <span class="icon">📌</span>
-        <span class="text">網址儲存</span>
-      </button>
-      <button class="menu-item" id="go-music">
-        <span class="icon">🎵</span>
-        <span class="text">OpiniMusic</span>
-      </button>
-      <button class="menu-item" id="go-calc">
-        <span class="icon">🧮</span>
-        <span class="text">計算機</span>
-      </button>
+      <button class="menu-item" id="go-saver">📌 網址儲存</button>
+      <button class="menu-item" id="go-music">🎵 OpiniMusic</button>
+      <button class="menu-item" id="go-calc">🧮 計算機</button>
+      <button id="logout-btn" style="margin-top:10px; background:#ff0000; color:white;">登出</button>
     </div>
   </div>
 
+  <!-- 其他頁面結構保持不變，但字體會由 CSS 控制 -->
   <div id="saver-page" class="container" style="display:none;">
-    <div class="header-row">
-      <button class="back-btn">⬅️ 返回</button>
-      <h2>網址儲存</h2>
-    </div>
-    <div class="current-info">
-      <p id="current-url" class="url-text"></p>
-    </div>
-    <label>自定義名稱：</label>
-    <input type="text" id="custom-name" placeholder="輸入此網址的顯示名稱...">
-    <label>備註：</label>
-    <textarea id="note-input" placeholder="在這裡輸入備註..."></textarea>
-    <button id="save-btn">儲存此網頁</button>
-    <hr>
-    <h3>已儲存的清單</h3>
+    <div class="header-row"><button class="back-btn">⬅️</button><h2>網址儲存</h2></div>
+    <input type="text" id="custom-name" placeholder="顯示名稱...">
+    <textarea id="note-input" placeholder="備註..."></textarea>
+    <button id="save-btn">儲存網頁</button>
     <div id="saved-list" class="scroll-list"></div>
-    <button id="clear-all" class="secondary-btn">清除所有紀錄</button>
   </div>
 
   <div id="music-page" class="container" style="display:none;">
-    <div class="header-row">
-      <button class="back-btn">⬅️ 返回</button>
-      <h2>OpiniMusic 管理歌曲</h2>
-    </div>
-    <div class="input-group">
-      <label>手動輸入網址 (或在 YouTube 頁面點擊按鈕)：</label>
-      <input type="text" id="music-url-input" placeholder="貼上音樂網址...">
-      <button id="analyze-save-btn">儲存歌曲</button>
-    </div>
-    <hr>
+    <div class="header-row"><button class="back-btn">⬅️</button><h2>OpiniMusic</h2></div>
     <div id="music-list" class="scroll-list"></div>
   </div>
 
   <div id="calc-page" class="container" style="display:none;">
-    <div class="header-row">
-      <button class="back-btn">⬅️ 返回</button>
-      <h2>計算機</h2>
-    </div>
+    <div class="header-row"><button class="back-btn">⬅️</button><h2>計算機</h2></div>
     <div class="calculator">
       <input type="text" id="calc-display" readonly value="0">
       <div class="calc-buttons">
@@ -81,22 +59,10 @@
         <button class="calc-btn backspace">⌫</button>
         <button class="calc-btn operator">%</button>
         <button class="calc-btn operator">/</button>
-        <button class="calc-btn">7</button>
-        <button class="calc-btn">8</button>
-        <button class="calc-btn">9</button>
-        <button class="calc-btn operator">*</button>
-        <button class="calc-btn">4</button>
-        <button class="calc-btn">5</button>
-        <button class="calc-btn">6</button>
-        <button class="calc-btn operator">-</button>
-        <button class="calc-btn">1</button>
-        <button class="calc-btn">2</button>
-        <button class="calc-btn">3</button>
-        <button class="calc-btn operator">+</button>
-        <button class="calc-btn plus-minus">±</button>
-        <button class="calc-btn">0</button>
-        <button class="calc-btn">.</button>
-        <button class="calc-btn equals">=</button>
+        <button class="calc-btn">7</button><button class="calc-btn">8</button><button class="calc-btn">9</button><button class="calc-btn operator">*</button>
+        <button class="calc-btn">4</button><button class="calc-btn">5</button><button class="calc-btn">6</button><button class="calc-btn operator">-</button>
+        <button class="calc-btn">1</button><button class="calc-btn">2</button><button class="calc-btn">3</button><button class="calc-btn operator">+</button>
+        <button class="calc-btn plus-minus">±</button><button class="calc-btn">0</button><button class="calc-btn">.</button><button class="calc-btn equals">=</button>
       </div>
     </div>
   </div>

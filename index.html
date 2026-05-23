@@ -3,83 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>opini v2.4 - 智能整合工具箱</title>
-    <!-- 引入類似 Manus AI Logo 的現代字體 -->
+    <title>opini v2.5 - 雲端同步整合工具箱</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
     <style>
+        /* 恢復原有網站 style */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', -apple-system, sans-serif; line-height: 1.6; color: #333; background: #f8f9fa; min-height: 100vh; }
-        header { background: #000000; color: white; padding: 4rem 0; text-align: center; }
-        header h1 { font-family: 'Montserrat', sans-serif; font-size: 3.5rem; letter-spacing: -2px; margin-bottom: 0.5rem; }
+        body { font-family: 'Inter', sans-serif; line-height: 1.6; color: #333; background: #f8f9fa; }
+        header { background: #000; color: white; padding: 4rem 0; text-align: center; }
+        header h1 { font-family: 'Montserrat', sans-serif; font-size: 3.5rem; letter-spacing: -2px; }
         .version-badge { display: inline-block; background: #0078d4; color: white; padding: 0.3rem 1rem; border-radius: 50px; font-size: 0.9rem; font-weight: bold; margin-top: 1rem; }
         .container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
         .hero { background: white; border-radius: 20px; padding: 4rem; margin-top: -3rem; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); text-align: center; }
-        .download-btn { display: inline-block; background: #000000; color: white; padding: 1.2rem 3rem; border-radius: 50px; text-decoration: none; font-size: 1.1rem; font-weight: bold; transition: all 0.3s; }
-        .download-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 4rem 0; }
-        .feature-card { background: white; padding: 2.5rem; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-top: 5px solid #000; }
-        .feature-card h3 { font-family: 'Montserrat', sans-serif; margin-bottom: 1rem; }
-        .installation { background: white; border-radius: 20px; padding: 4rem; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .installation h2 { font-family: 'Montserrat', sans-serif; font-size: 2rem; margin-bottom: 2rem; }
-        .step { margin-bottom: 2.5rem; }
-        .step h3 { font-size: 1.3rem; margin-bottom: 1rem; color: #0078d4; }
-        .code-block { background: #f1f3f5; padding: 1rem; border-radius: 8px; font-family: monospace; margin: 1rem 0; }
+        .warning-box { background: #fff3cd; border-left: 5px solid #ffc107; padding: 1.5rem; margin: 2rem 0; color: #856404; text-align: left; }
+        .download-btn { display: inline-block; background: #000; color: white; padding: 1.2rem 3rem; border-radius: 50px; text-decoration: none; font-weight: bold; }
+        .installation { background: white; border-radius: 20px; padding: 4rem; margin-top: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .step { margin-bottom: 2rem; }
+        .step h3 { color: #0078d4; margin-bottom: 0.5rem; }
         footer { text-align: center; padding: 4rem; color: #666; }
-        footer a { color: #000; font-weight: bold; text-decoration: none; border-bottom: 2px solid #000; }
+        footer a { color: #000; font-weight: bold; text-decoration: none; }
     </style>
 </head>
 <body>
     <header>
         <h1>opini</h1>
-        <div class="version-badge">v2.4 INTELLIGENT</div>
-        <p style="margin-top: 1rem; opacity: 0.8;">AI 影片總結 | YouTube 深度整合 | 專業工具箱</p>
+        <div class="version-badge">v2.5 CLOUD SYNC</div>
+        <p style="margin-top: 1rem; opacity: 0.8;">GitHub 雲端同步 | AI 影片總結 | 專業工具箱</p>
     </header>
     <div class="container">
         <div class="hero">
-            <h2 style="font-family: 'Montserrat', sans-serif; font-size: 2.2rem; margin-bottom: 1.5rem;">讓 AI 成為您的影片助手</h2>
-            <p style="font-size: 1.2rem; color: #666; margin-bottom: 2.5rem;">opini v2.4 帶來全新的 AI 影片總結功能，點擊按鈕即可快速獲取影片核心內容。</p>
-            <a href="https://github.com/lan2015se-collab/opini/releases/download/v2.4/opini_v2.4.zip" class="download-btn">⬇️ 下載最新版本 v2.4</a>
-        </div>
-        
-        <div class="features">
-            <div class="feature-card">
-                <h3>🤖 AI 影片總結</h3>
-                <p>整合 YouTube 介面，一鍵分析發布者、影片時長及內容摘要，節省您的寶貴時間。</p>
+            <h2 style="font-family: 'Montserrat', sans-serif; font-size: 2.2rem; margin-bottom: 1.5rem;">您的資料，隨時隨地與您同行</h2>
+            <p style="font-size: 1.2rem; color: #666;">opini v2.5 導入了 GitHub 雲端同步系統。只需登入帳號，即可在任何電腦同步您的影片與網址清單。</p>
+            
+            <div class="warning-box">
+                <strong>⚠️ 重要提醒：</strong><br>
+                請務必前往「擴充功能」->「詳細資料」，確保「<strong>自動允許下列網站存取</strong>」保持開啟。如果關閉此選項，AI 總結與雲端同步功能將無法運作！
             </div>
-            <div class="feature-card">
-                <h3>🎵 OpiniMusic</h3>
-                <p>深度整合 YouTube 頁面按鈕，快速收藏喜愛的音樂至擴充功能清單。</p>
-            </div>
-            <div class="feature-card">
-                <h3>🌑 經典視覺風格</h3>
-                <p>擴充功能內部維持黑底白字標楷體風格，提供最專業的高對比閱讀體驗。</p>
-            </div>
+
+            <a href="https://github.com/lan2015se-collab/opini/releases/download/v2.5/opini_v2.5.zip" class="download-btn">⬇️ 下載最新版本 v2.5</a>
         </div>
 
         <div class="installation">
-            <h2>📖 完整安裝教學</h2>
+            <h2>📖 安裝與使用指南</h2>
             <div class="step">
-                <h3>第一步：下載與解壓</h3>
-                <p>點擊上方按鈕下載 <code>opini_v2.4.zip</code>，並將其解壓縮至一個固定資料夾（如桌面）。</p>
+                <h3>1. 下載與解壓</h3>
+                <p>下載 <code>opini_v2.5.zip</code> 並解壓縮至資料夾。</p>
             </div>
             <div class="step">
-                <h3>第二步：開啟擴充功能管理</h3>
-                <p>在瀏覽器網址列輸入以下路徑並按 Enter：</p>
-                <div class="code-block">edge://extensions/ (Edge) 或 chrome://extensions/ (Chrome)</div>
+                <h3>2. 載入擴充功能</h3>
+                <p>在瀏覽器 <code>extensions</code> 頁面開啟「開發人員模式」，點擊「載入解壓縮的擴充功能」並選擇該資料夾。</p>
             </div>
             <div class="step">
-                <h3>第三步：載入資料夾</h3>
-                <p>開啟「<strong>開發人員模式</strong>」，點擊「<strong>載入解壓縮的擴充功能</strong>」，選擇解壓後的資料夾。</p>
-            </div>
-            <div class="step">
-                <h3>第四步：重新整理 YouTube</h3>
-                <p>安裝完成後，重新整理任何 YouTube 影片頁面，即可在「訂閱」按鈕旁看到功能按鈕。</p>
+                <h3>3. 註冊與登入</h3>
+                <p>首次使用請先註冊帳號，您的資料將自動加密同步至 GitHub 儲存庫。</p>
             </div>
         </div>
     </div>
     <footer>
         <p>由 <a href="https://eblog-ferz.lovable.app">Ferz</a> 建立與維護</p>
-        <p style="margin-top: 1rem; font-size: 0.9rem;">© 2026 opini. All rights reserved.</p>
     </footer>
 </body>
 </html>

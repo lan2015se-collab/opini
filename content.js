@@ -53,7 +53,7 @@ function injectOpiniButtons() {
             if (res.success) {
               showModal(res.summary, false);
             } else {
-              showModal('分析失敗: ' + res.error, false);
+              showModal('分析失敗: ' + (res.error || '未知錯誤'), false);
             }
           });
         };
@@ -77,7 +77,8 @@ function styleButton(btn, color) {
     font-weight: 500;
     cursor: pointer;
     font-size: 14px;
-    transition: opacity 0.2;
+    transition: opacity 0.2s;
+    font-family: 'Inter', sans-serif;
   `;
   btn.onmouseover = () => btn.style.opacity = '0.8';
   btn.onmouseout = () => btn.style.opacity = '1';
@@ -98,10 +99,20 @@ function showModal(content, isLoading) {
   }
   
   modal.innerHTML = `
-    <h3>🎬 影片 AI 總結</h3>
-    <div id="opini-summary-content">${content.replace(/\n/g, '<br>')}</div>
-    ${isLoading ? '<p style="text-align:center;">⏳ 請稍候...</p>' : '<button class="opini-close-btn" onclick="document.getElementById(\'opini-summary-modal\').remove()">關閉</button>'}
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #444; padding-bottom:10px;">
+      <h3 style="margin:0;">🎬 影片 AI 總結</h3>
+      <button id="opini-modal-close" style="background:none; border:none; color:white; font-size:24px; cursor:pointer;">&times;</button>
+    </div>
+    <div id="opini-summary-content" style="margin:15px 0; line-height:1.6; font-size:14px; max-height:300px; overflow-y:auto;">
+      ${content.replace(/\n/g, '<br>')}
+    </div>
+    ${isLoading ? '<p style="text-align:center;">⏳ 請稍候...</p>' : ''}
   `;
+
+  const closeBtn = document.getElementById('opini-modal-close');
+  if (closeBtn) {
+    closeBtn.onclick = () => modal.remove();
+  }
 }
 
 // 監聽頁面變化
